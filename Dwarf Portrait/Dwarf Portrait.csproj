@@ -35,6 +35,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="protobuf-net, Version=2.0.0.668, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\protobuf-net.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -55,6 +59,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="RemoteClientDF\Basic.cs" />
+    <Compile Include="RemoteClientDF\BasicApi.cs" />
+    <Compile Include="RemoteClientDF\ColorText.cs" />
+    <Compile Include="RemoteClientDF\CoreProtocol.cs" />
+    <Compile Include="RemoteClientDF\RemoteClient.cs" />
+    <Compile Include="RemoteClientDF\RemoteFortressReader.cs" />
+    <Compile Include="RemoteClientDF\Tools.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

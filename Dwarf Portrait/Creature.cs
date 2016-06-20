@@ -46,6 +46,14 @@ namespace Dwarf_Portrait
                         BodyPart part = new BodyPart();
                         part.OriginalIndex = i;
                         part.OriginalPart = CasteRaw.body_parts[i];
+
+                        foreach (var originalLayer in part.OriginalPart.layers)
+                        {
+                            BodyPartLayer layer = new BodyPartLayer();
+                            layer.Original = originalLayer;
+                            part.Layers.Add(layer);
+                        }
+
                         BodyPartList.Add(part);
                     }
 
@@ -59,6 +67,16 @@ namespace Dwarf_Portrait
                                 BodyPartList[part.OriginalPart.parent].Children = new List<BodyPart>();
                             BodyPartList[part.OriginalPart.parent].Children.Add(part);
                         }
+                    }
+
+                    for (int i = 0; i < CasteRaw.modifier_idx.Count; i++)
+                    {
+                        BpAppearanceModifier mod = CasteRaw.modifiers[CasteRaw.modifier_idx[i]];
+                        var part = BodyPartList[CasteRaw.part_idx[i]];
+                        if (CasteRaw.layer_idx[i] == -1)
+                            part.AppearanceMods.Add(mod);
+                        else
+                            part.Layers[CasteRaw.layer_idx[i]].AppearanceMods.Add(mod);
                     }
                 }
             }
@@ -119,6 +137,8 @@ namespace Dwarf_Portrait
 
         public List<BodyPart> BodypartTree { get; set; }
         public List<BodyPart> BodyPartList { get; set; }
+
+        public BodyPart SelectedBodyPart { get; set; }
 
         public int Index { get; set; }
     }

@@ -19,16 +19,16 @@
         <Button x:Name="fetchButton" Content="Fetch Info" Margin="10,0,10,10" Height="20" VerticalAlignment="Bottom" Click="fetchButton_Click" Grid.Column="2"/>
         <TabControl Margin="10,10,10,35" Grid.Column="2" >
             <TabItem Header="Units">
-                <ListView x:Name="unitListView" Margin="10" SelectionChanged="creatureList_SelectionChanged" Background="Black" HorizontalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-                    <ListView.ItemTemplate>
+                <ListBox x:Name="unitListView" Margin="10" SelectionChanged="creatureList_SelectionChanged" Background="Black" HorizontalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                    <ListBox.ItemTemplate>
                         <DataTemplate>
                             <Grid>
                                 <TextBlock Text="{Binding Name}" Foreground="{Binding ProfessionColor}" HorizontalAlignment="Left"/>
                                 <TextBlock Text="{Binding Race}" Foreground="LightGray" HorizontalAlignment="Right"/>
                             </Grid>
                         </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
+                    </ListBox.ItemTemplate>
+                </ListBox>
             </TabItem>
             <TabItem Header="Races">
                 <ListView x:Name="raceListView" Margin="10" SelectionChanged="creatureList_SelectionChanged" Background="Black" HorizontalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
@@ -172,28 +172,69 @@
                             <ColumnDefinition Width="22*"/>
                             <ColumnDefinition Width="23*"/>
                         </Grid.ColumnDefinitions>
-                        <ListView Margin="10,52,10,10" ItemsSource="{Binding OriginalPart.flags, Converter={StaticResource BodyPartRawFLagsConverter}}">
-                            <ListView.ItemTemplate>
+                        <ListBox Margin="10,52,10,76" ItemsSource="{Binding OriginalPart.flags, Converter={StaticResource BodyPartRawFLagsConverter}}">
+                            <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <CheckBox Content="{Binding Name}" IsChecked="{Binding Enabled}" IsEnabled="False"/>
                                 </DataTemplate>
-                            </ListView.ItemTemplate>
-                        </ListView>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                        <ListBox Margin="10,0,10,10" ItemsSource="{Binding AppearanceMods}" Height="61" VerticalAlignment="Bottom">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding type}"/>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
                         <Grid Margin="10,52,10,10" Grid.Column="1" x:Name="layerInfoGrid">
                             <Grid.RowDefinitions>
                                 <RowDefinition />
-                                <RowDefinition />
+                                <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
-                            <ListView  ItemsSource="{Binding OriginalPart.layers}">
-                                <ListView.ItemTemplate>
+                            <ListBox ItemsSource="{Binding Layers}" SelectedItem="{Binding SelectedLayer}">
+                                <ListBox.ItemTemplate>
                                     <DataTemplate>
                                         <WrapPanel>
-                                            <TextBlock Text="{Binding layer_name}"/>
-                                            <TextBlock Text="{Binding layer_name}"/>
+                                            <TextBlock Text="{Binding Original.layer_name}"/>
                                         </WrapPanel>
                                     </DataTemplate>
-                                </ListView.ItemTemplate>
-                            </ListView>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                            <StackPanel Grid.Row="1" DataContext="{Binding SelectedLayer}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Margin="10,10,0,0" Text="Layer Name: "/>
+                                    <TextBlock Margin="10,10,0,0" Text="{Binding Original.layer_name}" Grid.Column="1"/>
+                                </Grid>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Margin="10,10,0,0" Text="Tissue ID: "/>
+                                    <TextBlock Margin="10,10,0,0" Text="{Binding Original.tissue_id}" Grid.Column="1"/>
+                                </Grid>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Margin="10,10,0,0" Text="Layer Depth: "/>
+                                    <TextBlock Margin="10,10,0,0" Text="{Binding Original.layer_depth}" Grid.Column="1"/>
+                                </Grid>
+                                <TextBlock Margin="10,10,0,0
+                                           " Text="BP Modifiers: "/>
+                                <ListBox ItemsSource="{Binding AppearanceMods}">
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding type}"/>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                            </StackPanel>
                         </Grid>
                         <Grid Height="auto" VerticalAlignment="Top">
                             <Grid.ColumnDefinitions>
@@ -230,6 +271,7 @@
                     </Grid>
                 </Grid>
             </TabItem>
+
         </TabControl>
     </Grid>
 </Window>

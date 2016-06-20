@@ -12,23 +12,33 @@ namespace Dwarf_Portrait
     /// </summary>
     public partial class MainWindow : Window
     {
-        ObservableCollection<Creature> unitList = new ObservableCollection<Creature>();
         DFConnection dfConnection = new DFConnection();
 
-        ObservableCollection<FlagDisplay> flag1List = new ObservableCollection<FlagDisplay>();
-        ObservableCollection<FlagDisplay> flag2List = new ObservableCollection<FlagDisplay>();
-        ObservableCollection<FlagDisplay> flag3List = new ObservableCollection<FlagDisplay>();
+        ObservableCollection<Creature> UnitList { get; set; }
+        ObservableCollection<Creature> RaceList { get; set; }
+        ObservableCollection<FlagDisplay> flag1List { get; set; }
+        ObservableCollection<FlagDisplay> flag2List { get; set; }
+        ObservableCollection<FlagDisplay> flag3List { get; set; }
+
+        TextInfo TI = new CultureInfo("en-US", false).TextInfo;
 
         public MainWindow()
         {
             InitializeComponent();
 
-            creatureList.ItemsSource = unitList;
+            UnitList = new ObservableCollection<Creature>();
+            RaceList = new ObservableCollection<Creature>();
+            flag1List = new ObservableCollection<FlagDisplay>();
+            flag2List = new ObservableCollection<FlagDisplay>();
+            flag3List = new ObservableCollection<FlagDisplay>();
+
+            unitListView.ItemsSource = UnitList;
+            raceListView.ItemsSource = RaceList;
+
             flags1ListView.ItemsSource = flag1List;
             flags2ListView.ItemsSource = flag2List;
             flags3ListView.ItemsSource = flag3List;
 
-            TextInfo TI = new CultureInfo("en-US", false).TextInfo;
 
 
             for (int i = 0; i < 32; i++)
@@ -63,23 +73,62 @@ namespace Dwarf_Portrait
         private void fetchButton_Click(object sender, RoutedEventArgs e)
         {
             dfConnection.ConnectAndFetch();
-            if(dfConnection.unitList != null)
+            if (dfConnection.unitList != null)
             {
-                unitList.Clear();
-                foreach (RemoteFortressReader.UnitDefinition unit in dfConnection.unitList.creature_list)
+                UnitList.Clear();
+                for (int i = 0; i < dfConnection.unitList.creature_list.Count; i++)
                 {
+                    RemoteFortressReader.UnitDefinition unit = dfConnection.unitList.creature_list[i];
                     Creature listedCreature = new Creature();
+                    listedCreature.Index = i;
                     listedCreature.unitDefinition = unit;
                     if ((listedCreature.flags1 & UnitFlags.UnitFlags1.dead) == UnitFlags.UnitFlags1.dead)
                         continue;
                     if ((listedCreature.flags1 & UnitFlags.UnitFlags1.forest) == UnitFlags.UnitFlags1.forest)
                         continue;
-                    unitList.Add(listedCreature);
+                    UnitList.Add(listedCreature);
                 }
 
-                CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(creatureList.ItemsSource);
+                CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(unitListView.ItemsSource);
                 view.SortDescriptions.Add(new SortDescription("Name", ListSortDirection.Ascending));
                 view.SortDescriptions.Add(new SortDescription("Race", ListSortDirection.Ascending));
+            }
+            if(DFConnection.creatureRawList != null)
+            {
+                RaceList.Clear();
+                for(int raceIndex = 0; raceIndex < DFConnection.creatureRawList.creature_raws.Count; raceIndex++)
+                {
+                    var raceRaw = DFConnection.creatureRawList.creature_raws[raceIndex];
+                    for(int casteIndex = 0; casteIndex < raceRaw.caste.Count; casteIndex++)
+                    {
+                        var casteRaw = raceRaw.caste[casteIndex];
+                        RemoteFortressReader.UnitDefinition fakeUnit = new RemoteFortressReader.UnitDefinition();
+                        fakeUnit.race = new RemoteFortressReader.MatPair() { mat_type = raceIndex, mat_index = casteIndex };
+                        string name = casteRaw.caste_name[0];
+                        switch (casteRaw.gender)
+                        {
+                            case 0:
+                                name += " ♀";
+                                break;
+                            case 1:
+                                name += " ♂";
+                                break;
+                            //case -1:
+                            //    name += " ⚪";
+                            //    break;
+                            default:
+                                break;
+                        }
+                        name = TI.ToTitleCase(name);
+                        fakeUnit.name = name;
+                        Creature fakeCreature = new Creature() { unitDefinition = fakeUnit };
+                        RaceList.Add(fakeCreature);
+                    }
+                }
+
+                CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(raceListView.ItemsSource);
+                view.SortDescriptions.Add(new SortDescription("Race", ListSortDirection.Ascending));
+                view.SortDescriptions.Add(new SortDescription("Name", ListSortDirection.Ascending));
             }
         }
 
@@ -94,7 +143,7 @@ namespace Dwarf_Portrait
 
         private void UpdateView(Creature selectedUnit)
         {
-            UpdateInfo(selectedUnit);
+            unitViewTabControl.DataContext = selectedUnit;
             UpdateFlags(selectedUnit);
         }
 
@@ -126,10 +175,10 @@ namespace Dwarf_Portrait
             }
         }
 
-        private void UpdateInfo(Creature selectedUnit)
+        private void treeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            unitNameTextBox.Text = selectedUnit.Name;
-            unitRaceTextBox.Text = selectedUnit.Race;
+            BodyPart part = e.NewValue as BodyPart;
+            bodyPartPropertyGrid.DataContext = part;
         }
     }
 }

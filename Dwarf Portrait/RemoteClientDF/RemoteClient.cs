@@ -67,7 +67,7 @@ namespace DFHack
 
     struct RPCMessageHeader
     {
-        public const int MAX_MESSAGE_SIZE = 8 * 1048576;
+        public const int MAX_MESSAGE_SIZE = 64 * 1048576;
 
         public Int16 id;
         public Int32 size;

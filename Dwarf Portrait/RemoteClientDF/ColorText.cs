@@ -1,4 +1,5 @@
 using AT.MIN;
+using System.Diagnostics;
 
 namespace DFHack
 {
@@ -29,11 +30,11 @@ namespace DFHack
         string buffer;
         public void printerr(string Format, params object[] Parameters)
         {
-            //Debug.LogError(Tools.sprintf(Format, Parameters));
+            Debug.WriteLine(Tools.sprintf(Format, Parameters));
         }
         public void print(string Format, params object[] Parameters)
         {
-            //Debug.Log(Tools.sprintf(Format, Parameters));
+            Debug.WriteLine(Tools.sprintf(Format, Parameters));
         }
         public void begin_batch()
         {
@@ -41,13 +42,13 @@ namespace DFHack
         }
         public void end_batch()
         {
-            //Debug.Log(buffer);
+            Debug.WriteLine(buffer);
             buffer = null;
         }
 
         public void add_text(color_value color, string text)
         {
-            //Debug.Log(text);
+            Debug.WriteLine(text);
             buffer += text;
         }
 

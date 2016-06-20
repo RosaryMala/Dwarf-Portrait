@@ -84,6 +84,8 @@ namespace Dwarf_Portrait
             {
                 unitListCall.execute(null, out unitList);
             }
+
+            networkClient.disconnect();
         }
     }
 }

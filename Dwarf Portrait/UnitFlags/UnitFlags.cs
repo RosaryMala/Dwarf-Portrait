@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Windows.Data;
 
 namespace UnitFlags
 {
@@ -108,5 +111,70 @@ namespace UnitFlags
         unk26 = 0x4000000U,
         unk27 = 0x8000000U,
         gelded = 0x10000000U
+    }
+
+    enum body_part_raw_flags
+    {
+        HEAD,
+        UPPERBODY,
+        LOWERBODY,
+        SIGHT,
+        EMBEDDED,
+        INTERNAL,
+        CIRCULATION,
+        SKELETON,
+        LIMB,
+        GRASP,
+        STANCE,
+        GUTS,
+        BREATHE,
+        SMALL,
+        THROAT,
+        JOINT,
+        THOUGHT,
+        NERVOUS,
+        RIGHT,
+        LEFT,
+        HEAR,
+        SMELL,
+        FLIER,
+        DIGIT,
+        MOUTH,
+        APERTURE,
+        SOCKET,
+        TOTEMABLE,
+        anon_1,
+        anon_2,
+        UNDER_PRESSURE,
+        anon_3,
+        VERMIN_BUTCHER_ITEM,
+        CONNECTOR,
+        anon_4,
+        anon_5,
+        anon_6,
+        anon_7,
+        GELDABLE
+    };
+
+    public class BodyPartRawFLagsConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            List<bool> originalFlags = value as List<bool>;
+            List<FlagDisplay> output = new List<FlagDisplay>();
+            for (int i = 0; i < originalFlags.Count; i++)
+            {
+                FlagDisplay disp = new FlagDisplay();
+                disp.Enabled = originalFlags[i];
+                disp.Name = ((body_part_raw_flags)i).ToString();
+                output.Add(disp);
+            }
+            return output;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return null;
+        }
     }
 }

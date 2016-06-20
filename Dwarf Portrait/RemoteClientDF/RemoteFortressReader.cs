@@ -1653,6 +1653,103 @@ namespace RemoteFortressReader
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
   }
   
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"BodyPartLayerRaw")]
+  public partial class BodyPartLayerRaw : global::ProtoBuf.IExtensible
+  {
+    public BodyPartLayerRaw() {}
+    
+    private string _layer_name = "";
+    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"layer_name", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue("")]
+    public string layer_name
+    {
+      get { return _layer_name; }
+      set { _layer_name = value; }
+    }
+    private int _tissue_id = default(int);
+    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"tissue_id", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int tissue_id
+    {
+      get { return _tissue_id; }
+      set { _tissue_id = value; }
+    }
+    private int _layer_depth = default(int);
+    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"layer_depth", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int layer_depth
+    {
+      get { return _layer_depth; }
+      set { _layer_depth = value; }
+    }
+    private readonly global::System.Collections.Generic.List<int> _bp_modifiers = new global::System.Collections.Generic.List<int>();
+    [global::ProtoBuf.ProtoMember(4, Name=@"bp_modifiers", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public global::System.Collections.Generic.List<int> bp_modifiers
+    {
+      get { return _bp_modifiers; }
+    }
+  
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"BodyPartRaw")]
+  public partial class BodyPartRaw : global::ProtoBuf.IExtensible
+  {
+    public BodyPartRaw() {}
+    
+    private string _token = "";
+    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"token", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue("")]
+    public string token
+    {
+      get { return _token; }
+      set { _token = value; }
+    }
+    private string _category = "";
+    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"category", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue("")]
+    public string category
+    {
+      get { return _category; }
+      set { _category = value; }
+    }
+    private int _parent = default(int);
+    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"parent", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int parent
+    {
+      get { return _parent; }
+      set { _parent = value; }
+    }
+    private readonly global::System.Collections.Generic.List<bool> _flags = new global::System.Collections.Generic.List<bool>();
+    [global::ProtoBuf.ProtoMember(4, Name=@"flags", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<bool> flags
+    {
+      get { return _flags; }
+    }
+  
+    private readonly global::System.Collections.Generic.List<RemoteFortressReader.BodyPartLayerRaw> _layers = new global::System.Collections.Generic.List<RemoteFortressReader.BodyPartLayerRaw>();
+    [global::ProtoBuf.ProtoMember(5, Name=@"layers", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<RemoteFortressReader.BodyPartLayerRaw> layers
+    {
+      get { return _layers; }
+    }
+  
+    private int _relsize = default(int);
+    [global::ProtoBuf.ProtoMember(6, IsRequired = false, Name=@"relsize", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int relsize
+    {
+      get { return _relsize; }
+      set { _relsize = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
   [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"CasteRaw")]
   public partial class CasteRaw : global::ProtoBuf.IExtensible
   {
@@ -1702,6 +1799,21 @@ namespace RemoteFortressReader
     {
       get { return _gender; }
       set { _gender = value; }
+    }
+    private readonly global::System.Collections.Generic.List<RemoteFortressReader.BodyPartRaw> _body_parts = new global::System.Collections.Generic.List<RemoteFortressReader.BodyPartRaw>();
+    [global::ProtoBuf.ProtoMember(7, Name=@"body_parts", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<RemoteFortressReader.BodyPartRaw> body_parts
+    {
+      get { return _body_parts; }
+    }
+  
+    private int _total_relsize = default(int);
+    [global::ProtoBuf.ProtoMember(8, IsRequired = false, Name=@"total_relsize", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int total_relsize
+    {
+      get { return _total_relsize; }
+      set { _total_relsize = value; }
     }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)

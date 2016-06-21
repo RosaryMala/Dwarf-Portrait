@@ -61,6 +61,7 @@
     </ApplicationDefinition>
     <Compile Include="BodyPart.cs" />
     <Compile Include="BodyPartLayer.cs" />
+    <Compile Include="BodyPartMod.cs" />
     <Compile Include="Creature.cs" />
     <Compile Include="DFConnection.cs" />
     <Compile Include="RemoteClientDF\Basic.cs" />

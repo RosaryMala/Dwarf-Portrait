@@ -799,6 +799,13 @@ namespace RemoteFortressReader
       get { return _size_modifier; }
       set { _size_modifier = value; }
     }
+    private readonly global::System.Collections.Generic.List<int> _colors = new global::System.Collections.Generic.List<int>();
+    [global::ProtoBuf.ProtoMember(4, Name=@"colors", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public global::System.Collections.Generic.List<int> colors
+    {
+      get { return _colors; }
+    }
+  
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
@@ -927,6 +934,14 @@ namespace RemoteFortressReader
     {
       get { return _blood_count; }
       set { _blood_count = value; }
+    }
+    private RemoteFortressReader.UnitAppearance _appearance = null;
+    [global::ProtoBuf.ProtoMember(16, IsRequired = false, Name=@"appearance", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(null)]
+    public RemoteFortressReader.UnitAppearance appearance
+    {
+      get { return _appearance; }
+      set { _appearance = value; }
     }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
@@ -1685,6 +1700,94 @@ namespace RemoteFortressReader
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
   }
   
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"PatternDescriptor")]
+  public partial class PatternDescriptor : global::ProtoBuf.IExtensible
+  {
+    public PatternDescriptor() {}
+    
+    private string _id = "";
+    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"id", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue("")]
+    public string id
+    {
+      get { return _id; }
+      set { _id = value; }
+    }
+    private readonly global::System.Collections.Generic.List<RemoteFortressReader.ColorDefinition> _colors = new global::System.Collections.Generic.List<RemoteFortressReader.ColorDefinition>();
+    [global::ProtoBuf.ProtoMember(2, Name=@"colors", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<RemoteFortressReader.ColorDefinition> colors
+    {
+      get { return _colors; }
+    }
+  
+    private RemoteFortressReader.PatternType _pattern = RemoteFortressReader.PatternType.MONOTONE;
+    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"pattern", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(RemoteFortressReader.PatternType.MONOTONE)]
+    public RemoteFortressReader.PatternType pattern
+    {
+      get { return _pattern; }
+      set { _pattern = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"ColorModifierRaw")]
+  public partial class ColorModifierRaw : global::ProtoBuf.IExtensible
+  {
+    public ColorModifierRaw() {}
+    
+    private readonly global::System.Collections.Generic.List<RemoteFortressReader.PatternDescriptor> _patterns = new global::System.Collections.Generic.List<RemoteFortressReader.PatternDescriptor>();
+    [global::ProtoBuf.ProtoMember(1, Name=@"patterns", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<RemoteFortressReader.PatternDescriptor> patterns
+    {
+      get { return _patterns; }
+    }
+  
+    private readonly global::System.Collections.Generic.List<int> _body_part_id = new global::System.Collections.Generic.List<int>();
+    [global::ProtoBuf.ProtoMember(2, Name=@"body_part_id", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public global::System.Collections.Generic.List<int> body_part_id
+    {
+      get { return _body_part_id; }
+    }
+  
+    private readonly global::System.Collections.Generic.List<int> _tissue_layer_id = new global::System.Collections.Generic.List<int>();
+    [global::ProtoBuf.ProtoMember(3, Name=@"tissue_layer_id", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public global::System.Collections.Generic.List<int> tissue_layer_id
+    {
+      get { return _tissue_layer_id; }
+    }
+  
+    private int _start_date = default(int);
+    [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name=@"start_date", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int start_date
+    {
+      get { return _start_date; }
+      set { _start_date = value; }
+    }
+    private int _end_date = default(int);
+    [global::ProtoBuf.ProtoMember(5, IsRequired = false, Name=@"end_date", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int end_date
+    {
+      get { return _end_date; }
+      set { _end_date = value; }
+    }
+    private string _part = "";
+    [global::ProtoBuf.ProtoMember(6, IsRequired = false, Name=@"part", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue("")]
+    public string part
+    {
+      get { return _part; }
+      set { _part = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
   [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"BodyPartLayerRaw")]
   public partial class BodyPartLayerRaw : global::ProtoBuf.IExtensible
   {
@@ -1795,6 +1898,22 @@ namespace RemoteFortressReader
       get { return _type; }
       set { _type = value; }
     }
+    private int _mod_min = default(int);
+    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"mod_min", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int mod_min
+    {
+      get { return _mod_min; }
+      set { _mod_min = value; }
+    }
+    private int _mod_max = default(int);
+    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"mod_max", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int mod_max
+    {
+      get { return _mod_max; }
+      set { _mod_max = value; }
+    }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
@@ -1891,6 +2010,20 @@ namespace RemoteFortressReader
     public global::System.Collections.Generic.List<int> layer_idx
     {
       get { return _layer_idx; }
+    }
+  
+    private readonly global::System.Collections.Generic.List<RemoteFortressReader.BpAppearanceModifier> _body_appearance_modifiers = new global::System.Collections.Generic.List<RemoteFortressReader.BpAppearanceModifier>();
+    [global::ProtoBuf.ProtoMember(13, Name=@"body_appearance_modifiers", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<RemoteFortressReader.BpAppearanceModifier> body_appearance_modifiers
+    {
+      get { return _body_appearance_modifiers; }
+    }
+  
+    private readonly global::System.Collections.Generic.List<RemoteFortressReader.ColorModifierRaw> _color_modifiers = new global::System.Collections.Generic.List<RemoteFortressReader.ColorModifierRaw>();
+    [global::ProtoBuf.ProtoMember(14, Name=@"color_modifiers", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<RemoteFortressReader.ColorModifierRaw> color_modifiers
+    {
+      get { return _color_modifiers; }
     }
   
     private global::ProtoBuf.IExtension extensionObject;
@@ -2813,6 +2946,29 @@ namespace RemoteFortressReader
             
       [global::ProtoBuf.ProtoEnum(Name=@"F0G_THICK", Value=3)]
       F0G_THICK = 3
+    }
+  
+    [global::ProtoBuf.ProtoContract(Name=@"PatternType")]
+    public enum PatternType
+    {
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"MONOTONE", Value=0)]
+      MONOTONE = 0,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"STRIPES", Value=1)]
+      STRIPES = 1,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"IRIS_EYE", Value=2)]
+      IRIS_EYE = 2,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"SPOTS", Value=3)]
+      SPOTS = 3,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"PUPIL_EYE", Value=4)]
+      PUPIL_EYE = 4,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"MOTTLED", Value=5)]
+      MOTTLED = 5
     }
   
 }

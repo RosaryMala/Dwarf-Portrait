@@ -8,6 +8,12 @@ namespace Dwarf_Portrait
 {
     class Creature
     {
+        public Creature()
+        {
+            AppearanceMods = new List<BodyPartMod>();
+            BodypartTree = new List<BodyPart>();
+            BodyPartList = new List<BodyPart>();
+        }
         private UnitDefinition _unitDefinition;
         public UnitDefinition unitDefinition {
             get
@@ -36,8 +42,8 @@ namespace Dwarf_Portrait
                 else
                     professionColor = Colors.LightGray.ToString();
 
-                BodypartTree = new List<BodyPart>();
-                BodyPartList = new List<BodyPart>();
+                BodypartTree.Clear();
+                BodyPartList.Clear();
 
                 if (CasteRaw != null)
                 {
@@ -71,12 +77,30 @@ namespace Dwarf_Portrait
 
                     for (int i = 0; i < CasteRaw.modifier_idx.Count; i++)
                     {
-                        BpAppearanceModifier mod = CasteRaw.modifiers[CasteRaw.modifier_idx[i]];
+                        BodyPartMod mod = new BodyPartMod();
+                        mod.Original = CasteRaw.modifiers[CasteRaw.modifier_idx[i]];
+                        if(value.appearance != null)
+                        {
+                            mod.CurrentValue = value.appearance.bp_modifiers[i];
+                        }
                         var part = BodyPartList[CasteRaw.part_idx[i]];
                         if (CasteRaw.layer_idx[i] == -1)
                             part.AppearanceMods.Add(mod);
                         else
                             part.Layers[CasteRaw.layer_idx[i]].AppearanceMods.Add(mod);
+                    }
+
+                    for (int i = 0; i < CasteRaw.body_appearance_modifiers.Count; i++)
+                    {
+                        BodyPartMod mod = new BodyPartMod();
+                        mod.Original = CasteRaw.body_appearance_modifiers[i];
+                        if (value.appearance != null)
+                        {
+                            mod.CurrentValue = value.appearance.body_modifiers[i];
+                        }
+
+                        AppearanceMods.Add(mod);
+
                     }
                 }
             }
@@ -139,6 +163,8 @@ namespace Dwarf_Portrait
         public List<BodyPart> BodyPartList { get; set; }
 
         public BodyPart SelectedBodyPart { get; set; }
+
+        public List<BodyPartMod> AppearanceMods { get; set; }
 
         public int Index { get; set; }
     }

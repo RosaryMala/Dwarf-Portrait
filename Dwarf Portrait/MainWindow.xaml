@@ -155,37 +155,78 @@
                         <ColumnDefinition Width="5"/>
                         <ColumnDefinition Width="2*"/>
                     </Grid.ColumnDefinitions>
-                    <TreeView x:Name="treeView" Margin="10" Grid.Column="0" ItemsSource="{Binding BodypartTree}" SelectedItemChanged="treeView_SelectedItemChanged">
-                        <TreeView.Resources>
-                            <HierarchicalDataTemplate DataType="{x:Type local:BodyPart}" ItemsSource="{Binding Children}">
-                                <WrapPanel>
-                                    <TextBlock Text="{Binding OriginalPart.token}"/>
-                                    <TextBlock Text=" - "/>
-                                    <TextBlock Text="{Binding OriginalPart.category}"/>
-                                </WrapPanel>
-                            </HierarchicalDataTemplate>
-                        </TreeView.Resources>
-                    </TreeView>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+                        <TreeView x:Name="treeView" Margin="10,10,10,0" Grid.Column="0" ItemsSource="{Binding BodypartTree}" SelectedItemChanged="treeView_SelectedItemChanged">
+                            <TreeView.Resources>
+                                <HierarchicalDataTemplate DataType="{x:Type local:BodyPart}" ItemsSource="{Binding Children}">
+                                    <WrapPanel>
+                                        <TextBlock Text="{Binding OriginalPart.token}"/>
+                                        <TextBlock Text=" - "/>
+                                        <TextBlock Text="{Binding OriginalPart.category}"/>
+                                    </WrapPanel>
+                                </HierarchicalDataTemplate>
+                            </TreeView.Resources>
+                        </TreeView>
+                        <StackPanel Grid.Row="1">
+                            <TextBlock Margin="10,10,0,0" Text="Body Modifiers: "/>
+                            <ListBox Margin="10,0,10,10" ItemsSource="{Binding AppearanceMods}">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <WrapPanel>
+                                            <TextBlock Text="{Binding Original.type}"/>
+                                            <TextBlock Text=": "/>
+                                            <TextBlock Text="{Binding Original.mod_min}"/>
+                                            <TextBlock Text="-"/>
+                                            <TextBlock Text="{Binding CurrentValue}"/>
+                                            <TextBlock Text="-"/>
+                                            <TextBlock Text="{Binding Original.mod_max}"/>
+                                        </WrapPanel>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </StackPanel>
+                    </Grid>
                     <GridSplitter x:Name="gridSplitter" Grid.Column="1" Width="5" HorizontalAlignment="Stretch"/>
                     <Grid Grid.Column="2" x:Name="bodyPartPropertyGrid">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="22*"/>
                             <ColumnDefinition Width="23*"/>
                         </Grid.ColumnDefinitions>
-                        <ListBox Margin="10,52,10,76" ItemsSource="{Binding OriginalPart.flags, Converter={StaticResource BodyPartRawFLagsConverter}}">
-                            <ListBox.ItemTemplate>
-                                <DataTemplate>
-                                    <CheckBox Content="{Binding Name}" IsChecked="{Binding Enabled}" IsEnabled="False"/>
-                                </DataTemplate>
-                            </ListBox.ItemTemplate>
-                        </ListBox>
-                        <ListBox Margin="10,0,10,10" ItemsSource="{Binding AppearanceMods}" Height="61" VerticalAlignment="Bottom">
-                            <ListBox.ItemTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding type}"/>
-                                </DataTemplate>
-                            </ListBox.ItemTemplate>
-                        </ListBox>
+                        <Grid Margin="10,52,10,10">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition Height="auto"/>
+                            </Grid.RowDefinitions>
+                            <ListBox ItemsSource="{Binding OriginalPart.flags, Converter={StaticResource BodyPartRawFLagsConverter}}">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <CheckBox Content="{Binding Name}" IsChecked="{Binding Enabled}" IsEnabled="False"/>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                            <StackPanel Grid.Row="1">
+                                <TextBlock Margin="10,10,0,0" Text="Part Modifiers: "/>
+                                <ListBox ItemsSource="{Binding AppearanceMods}" VerticalAlignment="Bottom" Grid.Row="1">
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <WrapPanel>
+                                                <TextBlock Text="{Binding Original.type}"/>
+                                                <TextBlock Text=": "/>
+                                                <TextBlock Text="{Binding Original.mod_min}"/>
+                                                <TextBlock Text="-"/>
+                                                <TextBlock Text="{Binding CurrentValue}"/>
+                                                <TextBlock Text="-"/>
+                                                <TextBlock Text="{Binding Original.mod_max}"/>
+                                            </WrapPanel>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                            </StackPanel>
+                        </Grid>
                         <Grid Margin="10,52,10,10" Grid.Column="1" x:Name="layerInfoGrid">
                             <Grid.RowDefinitions>
                                 <RowDefinition />
@@ -201,36 +242,31 @@
                                 </ListBox.ItemTemplate>
                             </ListBox>
                             <StackPanel Grid.Row="1" DataContext="{Binding SelectedLayer}">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="auto"/>
-                                        <ColumnDefinition/>
-                                    </Grid.ColumnDefinitions>
+                                <WrapPanel>
                                     <TextBlock Margin="10,10,0,0" Text="Layer Name: "/>
                                     <TextBlock Margin="10,10,0,0" Text="{Binding Original.layer_name}" Grid.Column="1"/>
-                                </Grid>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="auto"/>
-                                        <ColumnDefinition/>
-                                    </Grid.ColumnDefinitions>
+                                </WrapPanel>
+                                <WrapPanel>
                                     <TextBlock Margin="10,10,0,0" Text="Tissue ID: "/>
                                     <TextBlock Margin="10,10,0,0" Text="{Binding Original.tissue_id}" Grid.Column="1"/>
-                                </Grid>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="auto"/>
-                                        <ColumnDefinition/>
-                                    </Grid.ColumnDefinitions>
+                                </WrapPanel>
+                                <WrapPanel>
                                     <TextBlock Margin="10,10,0,0" Text="Layer Depth: "/>
                                     <TextBlock Margin="10,10,0,0" Text="{Binding Original.layer_depth}" Grid.Column="1"/>
-                                </Grid>
-                                <TextBlock Margin="10,10,0,0
-                                           " Text="BP Modifiers: "/>
+                                </WrapPanel>
+                                <TextBlock Margin="10,10,0,0" Text="Layer Modifiers: "/>
                                 <ListBox ItemsSource="{Binding AppearanceMods}">
                                     <ListBox.ItemTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding type}"/>
+                                            <WrapPanel>
+                                                <TextBlock Text="{Binding Original.type}"/>
+                                                <TextBlock Text=": "/>
+                                                <TextBlock Text="{Binding Original.mod_min}"/>
+                                                <TextBlock Text="-"/>
+                                                <TextBlock Text="{Binding CurrentValue}"/>
+                                                <TextBlock Text="-"/>
+                                                <TextBlock Text="{Binding Original.mod_max}"/>
+                                            </WrapPanel>
                                         </DataTemplate>
                                     </ListBox.ItemTemplate>
                                 </ListBox>

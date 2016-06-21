@@ -11,9 +11,9 @@ namespace Dwarf_Portrait
     {
         public BodyPartLayer()
         {
-            AppearanceMods = new List<BpAppearanceModifier>();
+            AppearanceMods = new List<BodyPartMod>();
         }
         public BodyPartLayerRaw Original { get; set; }
-        public List<BpAppearanceModifier> AppearanceMods { get; set; }
+        public List<BodyPartMod> AppearanceMods { get; set; }
     }
 }

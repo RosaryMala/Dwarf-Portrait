@@ -60,9 +60,12 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="BodyPart.cs" />
+    <Compile Include="BodyPartInternalSelector.cs" />
     <Compile Include="BodyPartLayer.cs" />
     <Compile Include="BodyPartMod.cs" />
     <Compile Include="ColorMod.cs" />
+    <Compile Include="ColorPattern.cs" />
+    <Compile Include="ColorPatternTemplateSelector.cs" />
     <Compile Include="Creature.cs" />
     <Compile Include="DFConnection.cs" />
     <Compile Include="RemoteClientDF\Basic.cs" />

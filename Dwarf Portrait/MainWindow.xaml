@@ -9,6 +9,89 @@
         Title="MainWindow" Height="600" Width="800">
     <Window.Resources>
         <flags:BodyPartRawFLagsConverter x:Key="BodyPartRawFLagsConverter"/>
+        <DataTemplate x:Key="MonotonePatternTemplate">
+            <Border Width="24" Height="16" BorderBrush="Black" BorderThickness="1,1,1,1">
+                <Grid Background="{Binding Colors[0]}">
+                </Grid>
+            </Border>
+        </DataTemplate>
+        <DataTemplate x:Key="IrisEyePatternTemplate">
+            <Border Width="24" Height="16" BorderBrush="Black" BorderThickness="1,1,1,1">
+                <Grid Background="{Binding Colors[0]}">
+                    <Ellipse Height="14" Width="14" Fill="{Binding Colors[2]}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <Ellipse Height="6" Width="6" Fill="{Binding Colors[1]}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </Grid>
+            </Border>
+        </DataTemplate>
+        <DataTemplate x:Key="PupilEyePatternTemplate">
+            <Border Width="24" Height="16" BorderBrush="Black" BorderThickness="1,1,1,1">
+                <Grid Background="{Binding Colors[0]}">
+                    <Ellipse Height="6" Width="6" Fill="{Binding Colors[1]}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </Grid>
+            </Border>
+        </DataTemplate>
+        <DataTemplate x:Key="StripesPatternTemplate">
+            <Border Width="24" Height="16" BorderBrush="Black" BorderThickness="1,1,1,1">
+                <Grid>
+                    <Rectangle Width="5" Fill="{Binding Colors[0]}" HorizontalAlignment="Left"/>
+                    <Rectangle Width="6" Fill="{Binding Colors[1]}" HorizontalAlignment="Left" Margin="5,0,0,0"/>
+                    <Rectangle Width="6" Fill="{Binding Colors[0]}" HorizontalAlignment="Left" Margin="11,0,0,0"/>
+                    <Rectangle Width="5" Fill="{Binding Colors[1]}" HorizontalAlignment="Left" Margin="17,0,0,0"/>
+                </Grid>
+            </Border>
+        </DataTemplate>
+        <DataTemplate x:Key="Stripes7PatternTemplate">
+            <Border Width="23" Height="16" BorderBrush="Black" BorderThickness="1,1,1,1">
+                <Grid>
+                    <Rectangle Width="3" Fill="{Binding Colors[0]}" HorizontalAlignment="Left"/>
+                    <Rectangle Width="3" Fill="{Binding Colors[1]}" HorizontalAlignment="Left" Margin="3,0,0,0"/>
+                    <Rectangle Width="3" Fill="{Binding Colors[2]}" HorizontalAlignment="Left" Margin="6,0,0,0"/>
+                    <Rectangle Width="3" Fill="{Binding Colors[3]}" HorizontalAlignment="Left" Margin="9,0,0,0"/>
+                    <Rectangle Width="3" Fill="{Binding Colors[4]}" HorizontalAlignment="Left" Margin="12,0,0,0"/>
+                    <Rectangle Width="3" Fill="{Binding Colors[5]}" HorizontalAlignment="Left" Margin="15,0,0,0"/>
+                    <Rectangle Width="3" Fill="{Binding Colors[6]}" HorizontalAlignment="Left" Margin="18,0,0,0"/>
+                </Grid>
+            </Border>
+        </DataTemplate>
+        <DataTemplate x:Key="SpotsPatternTemplate">
+            <Border Width="24" Height="16" BorderBrush="Black" BorderThickness="1,1,1,1">
+                <Grid Background="{Binding Colors[0]}">
+                    <Ellipse Height="5" Width="5" Fill="{Binding Colors[1]}" Margin="1,1,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                    <Ellipse Height="4" Width="4" Fill="{Binding Colors[1]}" Margin="3,9,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                    <Ellipse Height="6" Width="6" Fill="{Binding Colors[1]}" Margin="8,3,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                    <Ellipse Height="5" Width="5" Fill="{Binding Colors[1]}" Margin="14,8,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                    <Ellipse Height="4" Width="4" Fill="{Binding Colors[1]}" Margin="17,1,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                </Grid>
+            </Border>
+        </DataTemplate>
+        <DataTemplate x:Key="MottledPatternTemplate">
+            <Border Width="24" Height="16" BorderBrush="Black" BorderThickness="1,1,1,1">
+                <Grid Background="{Binding Colors[0]}">
+                    <Ellipse Height="3" Width="3" Fill="{Binding Colors[1]}" Margin="1,1,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                    <Ellipse Height="3" Width="3" Fill="{Binding Colors[1]}" Margin="2,6,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                    <Ellipse Height="3" Width="3" Fill="{Binding Colors[1]}" Margin="1,10,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                    <Ellipse Height="3" Width="3" Fill="{Binding Colors[1]}" Margin="6,9,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                    <Ellipse Height="3" Width="3" Fill="{Binding Colors[1]}" Margin="6,3,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                    <Ellipse Height="3" Width="3" Fill="{Binding Colors[1]}" Margin="10,6,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                    <Ellipse Height="3" Width="3" Fill="{Binding Colors[1]}" Margin="10,1,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                    <Ellipse Height="3" Width="3" Fill="{Binding Colors[1]}" Margin="11,10,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                    <Ellipse Height="3" Width="3" Fill="{Binding Colors[1]}" Margin="14,7,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                    <Ellipse Height="3" Width="3" Fill="{Binding Colors[1]}" Margin="17,10,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                    <Ellipse Height="3" Width="3" Fill="{Binding Colors[1]}" Margin="18,5,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                    <Ellipse Height="3" Width="3" Fill="{Binding Colors[1]}" Margin="14,2,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                    <Ellipse Height="3" Width="3" Fill="{Binding Colors[1]}" Margin="18,1,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                </Grid>
+            </Border>
+        </DataTemplate>
+        <DataTemplate x:Key="BodyPartExternalTemplate">
+            <WrapPanel>
+                <TextBlock Text="{Binding OriginalPart.token}"/>
+                <TextBlock Text=" - "/>
+                <TextBlock Text="{Binding OriginalPart.category}" FontSize="12"/>
+            </WrapPanel>
+        </DataTemplate>
+        <local:ColorPatternTemplateSelector x:Key="colorPatternTemplateSelector"/>
+        <local:BodyPartInternalSelector x:Key="bodyPartInternalSelector"/>
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -47,12 +130,16 @@
         <TabControl x:Name="unitViewTabControl" Margin="10">
             <TabItem Header="Info">
                 <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="157*"/>
+                        <ColumnDefinition Width="394*"/>
+                    </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="40"/>
                         <RowDefinition Height="40"/>
                         <RowDefinition/>
                     </Grid.RowDefinitions>
-                    <Grid>
+                    <Grid Grid.ColumnSpan="2">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
                             <ColumnDefinition/>
@@ -83,7 +170,7 @@
                             <TextBlock Margin="10" TextWrapping="NoWrap" Grid.Column="1" Text="{Binding CasteRaw.caste_id}"/>
                         </Grid>
                     </Grid>
-                    <Grid Grid.Row="1">
+                    <Grid Grid.Row="1" Grid.ColumnSpan="2">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
                             <ColumnDefinition/>
@@ -160,13 +247,13 @@
                             <RowDefinition/>
                             <RowDefinition Height="auto"/>
                         </Grid.RowDefinitions>
-                        <TreeView x:Name="treeView" Margin="10,10,10,0" Grid.Column="0" ItemsSource="{Binding BodypartTree}" SelectedItemChanged="treeView_SelectedItemChanged">
+                        <TreeView x:Name="treeView" Margin="10,10,10,0" Grid.Column="0" ItemsSource="{Binding BodypartTree}" SelectedItemChanged="treeView_SelectedItemChanged" >
                             <TreeView.Resources>
                                 <HierarchicalDataTemplate DataType="{x:Type local:BodyPart}" ItemsSource="{Binding Children}">
                                     <WrapPanel>
                                         <TextBlock Text="{Binding OriginalPart.token}"/>
                                         <TextBlock Text=" - "/>
-                                        <TextBlock Text="{Binding OriginalPart.category}"/>
+                                        <TextBlock Text="{Binding OriginalPart.category}" FontSize="12"/>
                                     </WrapPanel>
                                 </HierarchicalDataTemplate>
                             </TreeView.Resources>
@@ -238,12 +325,7 @@
                                         <WrapPanel>
                                             <TextBlock Text="{Binding Original.layer_name}"/>
                                             <TextBlock Text=" "/>
-                                            <ItemsControl ItemsSource="{Binding ColorMod.CurrentPattern}">
-                                                <ItemsControl.ItemTemplate>
-                                                    <DataTemplate>
-                                                        <Rectangle Width="12" Height="12" Fill="{Binding}" Stroke="Black"/>
-                                                    </DataTemplate>
-                                                </ItemsControl.ItemTemplate>
+                                            <ItemsControl ItemsSource="{Binding ColorMod.CurrentPatterns}" ItemTemplateSelector="{StaticResource colorPatternTemplateSelector}">
                                                 <ItemsControl.ItemsPanel>
                                                     <ItemsPanelTemplate>
                                                         <StackPanel Orientation="Horizontal"/>
@@ -320,7 +402,34 @@
                     </Grid>
                 </Grid>
             </TabItem>
+            <TabItem Header="Portrait">
+                <Canvas>
+                    <Border Width="24" Height="16" BorderBrush="Black" BorderThickness="1,1,1,1">
+                        <Grid Background="Orange">
+                            <Ellipse Height="3" Width="3" Fill="Black" Margin="1,1,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                            <Ellipse Height="3" Width="3" Fill="Black" Margin="2,6,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                            <Ellipse Height="3" Width="3" Fill="Black" Margin="1,10,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                            <Ellipse Height="3" Width="3" Fill="Black" Margin="6,9,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                            <Ellipse Height="3" Width="3" Fill="Black" Margin="6,3,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                            <Ellipse Height="3" Width="3" Fill="Black" Margin="10,6,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                            <Ellipse Height="3" Width="3" Fill="Black" Margin="10,1,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                            <Ellipse Height="3" Width="3" Fill="Black" Margin="11,10,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                            <Ellipse Height="3" Width="3" Fill="Black" Margin="14,7,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                            <Ellipse Height="3" Width="3" Fill="Black" Margin="17,10,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                            <Ellipse Height="3" Width="3" Fill="Black" Margin="18,5,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                            <Ellipse Height="3" Width="3" Fill="Black" Margin="14,2,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                            <Ellipse Height="3" Width="3" Fill="Black" Margin="18,1,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                        </Grid>
+                    </Border>
 
+                    <Border Width="23" Height="12" BorderBrush="Black" BorderThickness="1,1,1,1" Canvas.Top="21">
+                        <Grid >
+                            <Ellipse Height="14" Width="14" Fill="{Binding Colors[3]}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <Ellipse Height="7" Width="7" Fill="Black" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Grid>
+                    </Border>
+                </Canvas>
+            </TabItem>
         </TabControl>
     </Grid>
 </Window>

@@ -108,13 +108,9 @@ namespace Dwarf_Portrait
                         mod.Original = CasteRaw.color_modifiers[i];
                         foreach (PatternDescriptor pattern in CasteRaw.color_modifiers[i].patterns)
                         {
-                            List<string> localPattern = new List<string>();
-                            foreach (ColorDefinition color in pattern.colors)
-                            {
-                                string colorString = string.Format("#FF{0:X2}{1:X2}{2:X2}", color.red, color.green, color.blue);
-                                localPattern.Add(colorString);
-                            }
-                            mod.Patterns.Add(localPattern);
+                            ColorPattern pat = new ColorPattern();
+                            pat.Original = pattern;
+                            mod.Patterns.Add(pat);
                         }
 
                         if(value.appearance != null)

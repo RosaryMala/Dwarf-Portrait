@@ -11,30 +11,22 @@ namespace Dwarf_Portrait
     {
         public ColorMod()
         {
-            Patterns = new List<List<string>>();
+            Patterns = new List<ColorPattern>();
             CurrentValue = -1;
         }
         public ColorModifierRaw Original { get; set; }
-        public List<List<string>> Patterns { get; set; }
+        public List<ColorPattern> Patterns { get; set; }
         public int CurrentValue { get; set; }
-        public List<string> CurrentPattern {
+        public List<ColorPattern> CurrentPatterns {
             get
             {
                 if(CurrentValue == -1)
                 {
-                    List<string> output = new List<string>();
-                    foreach (var patt in Patterns)
-                    {
-                        foreach(var col in patt)
-                        {
-                            output.Add(col);
-                        }
-                    }
-                    return output;
+                    return Patterns;
                 }
                 else
                 {
-                    return Patterns[CurrentValue];
+                    return new List<ColorPattern>() { Patterns[CurrentValue] };
                 }
             }
         }

@@ -237,6 +237,19 @@
                                     <DataTemplate>
                                         <WrapPanel>
                                             <TextBlock Text="{Binding Original.layer_name}"/>
+                                            <TextBlock Text=" "/>
+                                            <ItemsControl ItemsSource="{Binding ColorMod.CurrentPattern}">
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Rectangle Width="12" Height="12" Fill="{Binding}" Stroke="Black"/>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                                <ItemsControl.ItemsPanel>
+                                                    <ItemsPanelTemplate>
+                                                        <StackPanel Orientation="Horizontal"/>
+                                                    </ItemsPanelTemplate>
+                                                </ItemsControl.ItemsPanel>
+                                            </ItemsControl>
                                         </WrapPanel>
                                     </DataTemplate>
                                 </ListBox.ItemTemplate>

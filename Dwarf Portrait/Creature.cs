@@ -100,7 +100,41 @@ namespace Dwarf_Portrait
                         }
 
                         AppearanceMods.Add(mod);
+                    }
 
+                    for(int i = 0; i < CasteRaw.color_modifiers.Count;i++)
+                    {
+                        ColorMod mod = new ColorMod();
+                        mod.Original = CasteRaw.color_modifiers[i];
+                        foreach (PatternDescriptor pattern in CasteRaw.color_modifiers[i].patterns)
+                        {
+                            List<string> localPattern = new List<string>();
+                            foreach (ColorDefinition color in pattern.colors)
+                            {
+                                string colorString = string.Format("#FF{0:X2}{1:X2}{2:X2}", color.red, color.green, color.blue);
+                                localPattern.Add(colorString);
+                            }
+                            mod.Patterns.Add(localPattern);
+                        }
+
+                        if(value.appearance != null)
+                        {
+                            mod.CurrentValue = value.appearance.colors[i];
+                        }
+
+                        for(int j = 0; j < mod.Original.body_part_id.Count; j++)
+                        {
+                            if(mod.Original.tissue_layer_id[j] == -1)
+                            {
+                                if(BodyPartList[mod.Original.body_part_id[j]].ColorMod == null)
+                                    BodyPartList[mod.Original.body_part_id[j]].ColorMod = mod;
+                            }
+                            else
+                            {
+                                if(BodyPartList[mod.Original.body_part_id[j]].Layers[mod.Original.tissue_layer_id[j]].ColorMod == null)
+                                    BodyPartList[mod.Original.body_part_id[j]].Layers[mod.Original.tissue_layer_id[j]].ColorMod = mod;
+                            }
+                        }
                     }
                 }
             }

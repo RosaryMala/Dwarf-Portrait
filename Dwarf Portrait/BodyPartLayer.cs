@@ -15,5 +15,6 @@ namespace Dwarf_Portrait
         }
         public BodyPartLayerRaw Original { get; set; }
         public List<BodyPartMod> AppearanceMods { get; set; }
+        public ColorMod ColorMod { get; set; }
     }
 }

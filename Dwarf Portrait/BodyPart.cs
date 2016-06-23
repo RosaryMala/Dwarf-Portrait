@@ -17,5 +17,16 @@ namespace Dwarf_Portrait
         public List<BodyPartLayer> Layers { get; set; }
         public List<BodyPartMod> AppearanceMods { get; set; }
         public ColorMod ColorMod { get; set; }
+        public bool IsInternal
+        {
+            get
+            {
+                if (OriginalPart == null)
+                    return false;
+                else
+                    return
+                        OriginalPart.flags[(int)UnitFlags.body_part_raw_flags.INTERNAL];
+            }
+        }
     }
 }

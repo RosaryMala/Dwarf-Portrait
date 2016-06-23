@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Globalization;
 using System.Windows;
@@ -92,6 +93,7 @@ namespace Dwarf_Portrait
                 CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(unitListView.ItemsSource);
                 view.SortDescriptions.Add(new SortDescription("Name", ListSortDirection.Ascending));
                 view.SortDescriptions.Add(new SortDescription("Race", ListSortDirection.Ascending));
+                view.Filter = UnitlistFilter;
             }
             if(DFConnection.creatureRawList != null)
             {
@@ -129,6 +131,7 @@ namespace Dwarf_Portrait
                 CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(raceListView.ItemsSource);
                 view.SortDescriptions.Add(new SortDescription("Race", ListSortDirection.Ascending));
                 view.SortDescriptions.Add(new SortDescription("Name", ListSortDirection.Ascending));
+                view.Filter = UnitlistFilter;
             }
         }
 
@@ -179,6 +182,23 @@ namespace Dwarf_Portrait
         {
             BodyPart part = e.NewValue as BodyPart;
             bodyPartPropertyGrid.DataContext = part;
+        }
+
+        private bool UnitlistFilter (object item)
+        {
+            if (string.IsNullOrEmpty(unitFilterTextbox.Text))
+                return true;
+            else
+                return ((item as Creature).Name.IndexOf(unitFilterTextbox.Text, StringComparison.OrdinalIgnoreCase) >= 0)
+                    || ((item as Creature).Race.IndexOf(unitFilterTextbox.Text, StringComparison.OrdinalIgnoreCase) >= 0);
+        }
+
+        private void unitFilterTextbox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            if(unitListView.ItemsSource != null)
+                CollectionViewSource.GetDefaultView(unitListView.ItemsSource).Refresh();
+            if(raceListView.ItemsSource != null)
+                CollectionViewSource.GetDefaultView(raceListView.ItemsSource).Refresh();
         }
     }
 }

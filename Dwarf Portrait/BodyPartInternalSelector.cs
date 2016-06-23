@@ -7,7 +7,15 @@ namespace Dwarf_Portrait
     {
         public override DataTemplate SelectTemplate(object item, DependencyObject container)
         {
-            return base.SelectTemplate(item, container);
+            FrameworkElement element = container as FrameworkElement;
+            BodyPart part = item as BodyPart;
+            if(item == null)
+                return base.SelectTemplate(item, container);
+
+            if(part.IsInternal)
+                return element.FindResource("BodyPartInternalTemplate") as HierarchicalDataTemplate;
+            else
+                return element.FindResource("BodyPartExternalTemplate") as HierarchicalDataTemplate;
         }
     }
 }

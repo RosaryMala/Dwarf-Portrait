@@ -1,9 +1,5 @@
-﻿using System;
+﻿using RemoteFortressReader;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using RemoteFortressReader;
 
 namespace Dwarf_Portrait
 {

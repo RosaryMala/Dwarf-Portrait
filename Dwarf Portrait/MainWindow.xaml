@@ -10,13 +10,13 @@
     <Window.Resources>
         <flags:BodyPartRawFLagsConverter x:Key="BodyPartRawFLagsConverter"/>
         <DataTemplate x:Key="MonotonePatternTemplate">
-            <Border Width="24" Height="16" BorderBrush="Black" BorderThickness="1,1,1,1">
+            <Border Width="16" Height="16" BorderBrush="Black" BorderThickness="1,1,1,1">
                 <Grid Background="{Binding Colors[0]}">
                 </Grid>
             </Border>
         </DataTemplate>
         <DataTemplate x:Key="IrisEyePatternTemplate">
-            <Border Width="24" Height="16" BorderBrush="Black" BorderThickness="1,1,1,1">
+            <Border Width="16" Height="16" BorderBrush="Black" BorderThickness="1,1,1,1">
                 <Grid Background="{Binding Colors[0]}">
                     <Ellipse Height="14" Width="14" Fill="{Binding Colors[2]}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     <Ellipse Height="6" Width="6" Fill="{Binding Colors[1]}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
@@ -24,19 +24,22 @@
             </Border>
         </DataTemplate>
         <DataTemplate x:Key="PupilEyePatternTemplate">
-            <Border Width="24" Height="16" BorderBrush="Black" BorderThickness="1,1,1,1">
+            <Border Width="16" Height="16" BorderBrush="Black" BorderThickness="1,1,1,1">
                 <Grid Background="{Binding Colors[0]}">
                     <Ellipse Height="6" Width="6" Fill="{Binding Colors[1]}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 </Grid>
             </Border>
         </DataTemplate>
         <DataTemplate x:Key="StripesPatternTemplate">
-            <Border Width="24" Height="16" BorderBrush="Black" BorderThickness="1,1,1,1">
+            <Border Width="23" Height="16" BorderBrush="Black" BorderThickness="1,1,1,1">
                 <Grid>
-                    <Rectangle Width="5" Fill="{Binding Colors[0]}" HorizontalAlignment="Left"/>
-                    <Rectangle Width="6" Fill="{Binding Colors[1]}" HorizontalAlignment="Left" Margin="5,0,0,0"/>
-                    <Rectangle Width="6" Fill="{Binding Colors[0]}" HorizontalAlignment="Left" Margin="11,0,0,0"/>
-                    <Rectangle Width="5" Fill="{Binding Colors[1]}" HorizontalAlignment="Left" Margin="17,0,0,0"/>
+                    <Rectangle Width="3" Fill="{Binding Colors[0]}" HorizontalAlignment="Left"/>
+                    <Rectangle Width="3" Fill="{Binding Colors[1]}" HorizontalAlignment="Left" Margin="3,0,0,0"/>
+                    <Rectangle Width="3" Fill="{Binding Colors[0]}" HorizontalAlignment="Left" Margin="6,0,0,0"/>
+                    <Rectangle Width="3" Fill="{Binding Colors[1]}" HorizontalAlignment="Left" Margin="9,0,0,0"/>
+                    <Rectangle Width="3" Fill="{Binding Colors[0]}" HorizontalAlignment="Left" Margin="12,0,0,0"/>
+                    <Rectangle Width="3" Fill="{Binding Colors[1]}" HorizontalAlignment="Left" Margin="15,0,0,0"/>
+                    <Rectangle Width="3" Fill="{Binding Colors[0]}" HorizontalAlignment="Left" Margin="18,0,0,0"/>
                 </Grid>
             </Border>
         </DataTemplate>
@@ -83,13 +86,20 @@
                 </Grid>
             </Border>
         </DataTemplate>
-        <DataTemplate x:Key="BodyPartExternalTemplate">
+        <HierarchicalDataTemplate x:Key="BodyPartExternalTemplate" DataType="{x:Type local:BodyPart}" ItemsSource="{Binding Children}">
             <WrapPanel>
-                <TextBlock Text="{Binding OriginalPart.token}"/>
-                <TextBlock Text=" - "/>
-                <TextBlock Text="{Binding OriginalPart.category}" FontSize="12"/>
+                <TextBlock Text="{Binding OriginalPart.token}" FontWeight="Bold"/>
+                <TextBlock Text=" - " FontSize="8" VerticalAlignment="Bottom"/>
+                <TextBlock Text="{Binding OriginalPart.category}" FontSize="8" VerticalAlignment="Bottom"/>
             </WrapPanel>
-        </DataTemplate>
+        </HierarchicalDataTemplate>
+        <HierarchicalDataTemplate x:Key="BodyPartInternalTemplate" DataType="{x:Type local:BodyPart}" ItemsSource="{Binding Children}">
+            <WrapPanel>
+                <TextBlock Text="{Binding OriginalPart.token}" FontSize="10" VerticalAlignment="Bottom"/>
+                <TextBlock Text=" - " FontSize="8" VerticalAlignment="Bottom"/>
+                <TextBlock Text="{Binding OriginalPart.category}" FontSize="8" VerticalAlignment="Bottom"/>
+            </WrapPanel>
+        </HierarchicalDataTemplate>
         <local:ColorPatternTemplateSelector x:Key="colorPatternTemplateSelector"/>
         <local:BodyPartInternalSelector x:Key="bodyPartInternalSelector"/>
     </Window.Resources>
@@ -100,7 +110,7 @@
             <ColumnDefinition Width="210"/>
         </Grid.ColumnDefinitions>
         <Button x:Name="fetchButton" Content="Fetch Info" Margin="10,0,10,10" Height="20" VerticalAlignment="Bottom" Click="fetchButton_Click" Grid.Column="2"/>
-        <TabControl Margin="10,10,10,35" Grid.Column="2" >
+        <TabControl Margin="10,38,10,35" Grid.Column="2" >
             <TabItem Header="Units">
                 <ListBox x:Name="unitListView" Margin="10" SelectionChanged="creatureList_SelectionChanged" Background="Black" HorizontalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                     <ListBox.ItemTemplate>
@@ -247,16 +257,7 @@
                             <RowDefinition/>
                             <RowDefinition Height="auto"/>
                         </Grid.RowDefinitions>
-                        <TreeView x:Name="treeView" Margin="10,10,10,0" Grid.Column="0" ItemsSource="{Binding BodypartTree}" SelectedItemChanged="treeView_SelectedItemChanged" >
-                            <TreeView.Resources>
-                                <HierarchicalDataTemplate DataType="{x:Type local:BodyPart}" ItemsSource="{Binding Children}">
-                                    <WrapPanel>
-                                        <TextBlock Text="{Binding OriginalPart.token}"/>
-                                        <TextBlock Text=" - "/>
-                                        <TextBlock Text="{Binding OriginalPart.category}" FontSize="12"/>
-                                    </WrapPanel>
-                                </HierarchicalDataTemplate>
-                            </TreeView.Resources>
+                        <TreeView x:Name="treeView" Margin="10,10,10,0" Grid.Column="0" ItemsSource="{Binding BodypartTree}" SelectedItemChanged="treeView_SelectedItemChanged" ItemTemplateSelector="{StaticResource bodyPartInternalSelector}">
                         </TreeView>
                         <StackPanel Grid.Row="1">
                             <TextBlock Margin="10,10,0,0" Text="Body Modifiers: "/>
@@ -402,7 +403,7 @@
                     </Grid>
                 </Grid>
             </TabItem>
-            <TabItem Header="Portrait">
+            <!--<TabItem Header="Portrait">
                 <Canvas>
                     <Border Width="24" Height="16" BorderBrush="Black" BorderThickness="1,1,1,1">
                         <Grid Background="Orange">
@@ -429,7 +430,9 @@
                         </Grid>
                     </Border>
                 </Canvas>
-            </TabItem>
+            </TabItem>-->
         </TabControl>
+        <TextBox x:Name="unitFilterTextbox" Grid.Column="2" Height="23" Margin="54,10,10,0" TextWrapping="Wrap" VerticalAlignment="Top" TextChanged="unitFilterTextbox_TextChanged"/>
+        <Label x:Name="label" Content="Filter:" Grid.Column="2" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="23"/>
     </Grid>
 </Window>

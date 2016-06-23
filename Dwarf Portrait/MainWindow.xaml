@@ -258,6 +258,11 @@
                             <RowDefinition Height="auto"/>
                         </Grid.RowDefinitions>
                         <TreeView x:Name="treeView" Margin="10,10,10,0" Grid.Column="0" ItemsSource="{Binding BodypartTree}" SelectedItemChanged="treeView_SelectedItemChanged" ItemTemplateSelector="{StaticResource bodyPartInternalSelector}">
+                            <TreeView.Resources>
+                                <Style TargetType="TreeViewItem">
+                                    <Setter Property="IsExpanded" Value="True"/>
+                                </Style>
+                            </TreeView.Resources>
                         </TreeView>
                         <StackPanel Grid.Row="1">
                             <TextBlock Margin="10,10,0,0" Text="Body Modifiers: "/>

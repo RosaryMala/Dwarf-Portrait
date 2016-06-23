@@ -2026,6 +2026,22 @@ namespace RemoteFortressReader
       get { return _color_modifiers; }
     }
   
+    private string _description = "";
+    [global::ProtoBuf.ProtoMember(15, IsRequired = false, Name=@"description", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue("")]
+    public string description
+    {
+      get { return _description; }
+      set { _description = value; }
+    }
+    private int _adult_size = default(int);
+    [global::ProtoBuf.ProtoMember(16, IsRequired = false, Name=@"adult_size", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    [global::System.ComponentModel.DefaultValue(default(int))]
+    public int adult_size
+    {
+      get { return _adult_size; }
+      set { _adult_size = value; }
+    }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }

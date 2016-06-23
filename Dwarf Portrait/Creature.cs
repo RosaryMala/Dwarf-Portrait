@@ -197,5 +197,16 @@ namespace Dwarf_Portrait
         public List<BodyPartMod> AppearanceMods { get; set; }
 
         public int Index { get; set; }
+
+        public int Size
+        {
+            get
+            {
+                if (unitDefinition.size_info == null)
+                    return CasteRaw.adult_size;
+                else
+                    return unitDefinition.size_info.size_cur;
+            }
+        }
     }
 }

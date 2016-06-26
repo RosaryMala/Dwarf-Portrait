@@ -238,24 +238,59 @@ namespace Dwarf_Portrait
 
         private static void AddPart(Canvas canvas, Vector parentPos, BodyPart part, Vector pos, double creatureScale, double visualScale, bool centered = false)
         {
-            Ellipse partShape = new Ellipse();
+            Shape partShape;
 
-            double dia = VolumeToDiameterConverter.Convert(part.OriginalPart.relsize * creatureScale) * visualScale;
+            double length;
+
+            switch (part.OriginalPart.category)
+            {
+                case "NECK":
+                    partShape = new Rectangle();
+
+                    double headDia = VolumeToDiameterConverter.Convert(part.OriginalPart.relsize * creatureScale);
+                    foreach (var child in part.Children)
+                    {
+                        if(child.OriginalPart.category == "HEAD")
+                        {
+                            headDia = VolumeToDiameterConverter.Convert(child.OriginalPart.relsize * creatureScale);
+                            break;
+                        }
+                    }
+                    headDia /= 3;
+                    double neckArea = Math.PI * (headDia / 2) * (headDia / 2);
+                    length = ((part.OriginalPart.relsize * creatureScale) / neckArea) * visualScale;
+                    partShape.Width = headDia * visualScale;
+                    partShape.Height = length;
+                    Vector localPos = pos - parentPos;
+                    RotateTransform rotation = new RotateTransform(-Math.Atan2(localPos.X, localPos.Y) * 180 / Math.PI, partShape.Width/2, partShape.Height/2);
+
+                    partShape.RenderTransform = rotation;
+
+                    break;
+                default:
+                    partShape = new Ellipse();
+
+                    length = VolumeToDiameterConverter.Convert(part.OriginalPart.relsize * creatureScale) * visualScale;
+
+                    partShape.Width = length;
+                    partShape.Height = length;
+                    break;
+            }
+
             if (!centered)
             {
                 var relPos = pos - parentPos;
                 if (relPos.LengthSquared > 0.0001)
                 {
                     relPos.Normalize();
-                    relPos *= (dia / 2);
+                    relPos *= (length / 2);
                     pos += relPos;
                 }
             }
 
-            partShape.Width = dia;
-            partShape.Height = dia;
             Canvas.SetLeft(partShape, (-partShape.Width / 2) + pos.X);
             Canvas.SetTop(partShape, (-partShape.Height / 2) + pos.Y);
+
 
             BodyPartLayer usedLayer = null;
             foreach (var layer in part.Layers)
@@ -291,8 +326,8 @@ namespace Dwarf_Portrait
                 if (usedLayer.ColorMod.CurrentPatterns[0].Pattern == RemoteFortressReader.PatternType.IRIS_EYE)
                 {
                     Ellipse iris = new Ellipse();
-                    iris.Width = dia * 2 / 3;
-                    iris.Height = dia * 2 / 3;
+                    iris.Width = length * 2 / 3;
+                    iris.Height = length * 2 / 3;
                     Canvas.SetLeft(iris, (-iris.Width / 2) + pos.X);
                     Canvas.SetTop(iris, (-iris.Height / 2) + pos.Y);
                     var color = usedLayer.ColorMod.CurrentPatterns[0].Original.colors[2];
@@ -301,8 +336,8 @@ namespace Dwarf_Portrait
 
                     canvas.Children.Add(iris);
                     Ellipse pupil = new Ellipse();
-                    pupil.Width = dia / 3;
-                    pupil.Height = dia / 3;
+                    pupil.Width = length / 3;
+                    pupil.Height = length / 3;
                     Canvas.SetLeft(pupil, (-pupil.Width / 2) + pos.X);
                     Canvas.SetTop(pupil, (-pupil.Height / 2) + pos.Y);
                     var pupilColor = usedLayer.ColorMod.CurrentPatterns[0].Original.colors[1];
@@ -313,8 +348,8 @@ namespace Dwarf_Portrait
                 if (usedLayer.ColorMod.CurrentPatterns[0].Pattern == RemoteFortressReader.PatternType.PUPIL_EYE)
                 {
                     Ellipse pupil = new Ellipse();
-                    pupil.Width = dia / 3;
-                    pupil.Height = dia / 3;
+                    pupil.Width = length / 3;
+                    pupil.Height = length / 3;
                     Canvas.SetLeft(pupil, (-pupil.Width / 2) + pos.X);
                     Canvas.SetTop(pupil, (-pupil.Height / 2) + pos.Y);
                     var pupilColor = usedLayer.ColorMod.CurrentPatterns[0].Original.colors[1];
@@ -340,6 +375,9 @@ namespace Dwarf_Portrait
             List<BodyPart> LipParts = new List<BodyPart>();
             List<BodyPart> NoseParts = new List<BodyPart>();
             List<BodyPart> CheekParts = new List<BodyPart>();
+            List<BodyPart> TuskParts = new List<BodyPart>();
+            List<BodyPart> LeftEarParts = new List<BodyPart>();
+            List<BodyPart> RightEarParts = new List<BodyPart>();
 
             foreach (var child in part.Children)
             {
@@ -366,8 +404,18 @@ namespace Dwarf_Portrait
                         case "CHEEK":
                             CheekParts.Add(child);
                             break;
+                        case "TUSK":
+                            TuskParts.Add(child);
+                            break;
+                        case "EAR":
+                            if (child.IsLeft)
+                                LeftEarParts.Add(child);
+                            else
+                                RightEarParts.Add(child);
+                            break;
                         case "TOOTH":
                         case "TONGUE":
+                        case "THROAT":
                             break;
                         default:
                             if (child.IsLowerBody)
@@ -385,6 +433,8 @@ namespace Dwarf_Portrait
                 }
             }
 
+            bool root = pos.Length < 0.0001;
+
             for (int i = 0; i < ExternalParts.Count; i++)
             {
                 BodyPart child = ExternalParts[i];
@@ -393,40 +443,72 @@ namespace Dwarf_Portrait
                     rotateAngle = Range(i, ExternalParts.Count, -45, 45);
                 else
                     rotateAngle = Range(i, ExternalParts.Count, 45, -45);
-                AddPart(canvas, pos, child, pos + (direction * dia / 2).Rotate(rotateAngle), creatureScale, visualScale);
+                AddPart(canvas, pos, child, pos + (direction * length / 2).Rotate(rotateAngle), creatureScale, visualScale);
             }
             for (int i = 0; i < LowerBodyParts.Count; i++)
             {
                 BodyPart child = LowerBodyParts[i];
                 double rotateAngle = Range(i, LowerBodyParts.Count, 135, 225);
-                AddPart(canvas, pos, child, pos + (direction * dia / 2).Rotate(rotateAngle), creatureScale, visualScale);
+                AddPart(canvas, pos, child, pos + (direction * length / 2).Rotate(rotateAngle), creatureScale, visualScale);
             }
             for (int i = 0; i < LeftParts.Count; i++)
             {
                 BodyPart child = LeftParts[i];
                 double rotateAngle = 0;
                 if (part.IsLowerBody)
-                    rotateAngle = Range(i, LeftParts.Count, -45, -90);
+                    if (root)
+                        rotateAngle = Range(i, LeftParts.Count, 45, 135);
+                    else
+                        rotateAngle = Range(i, LeftParts.Count, -20, -40);
                 else
-                    rotateAngle = Range(i, LeftParts.Count, 45, 135);
-                AddPart(canvas, pos, child, pos + (direction * dia / 2).Rotate(rotateAngle), creatureScale, visualScale);
+                    rotateAngle = Range(i, LeftParts.Count, 45, 90);
+                AddPart(canvas, pos, child, pos + (direction * length / 2).Rotate(rotateAngle), creatureScale, visualScale);
             }
             for (int i = 0; i < RightParts.Count; i++)
             {
                 BodyPart child = RightParts[i];
                 double rotateAngle = 0;
                 if (part.IsLowerBody)
-                    rotateAngle = Range(i, RightParts.Count, 45, 90);
+                    if (root)
+                        rotateAngle = Range(i, RightParts.Count, -45, -135);
+                    else
+                        rotateAngle = Range(i, RightParts.Count, 20, 40);
                 else
-                    rotateAngle = Range(i, RightParts.Count, -45, -135);
-                AddPart(canvas, pos, child, pos + (direction * dia / 2).Rotate(rotateAngle), creatureScale, visualScale);
+                    rotateAngle = Range(i, RightParts.Count, -45, -90);
+                AddPart(canvas, pos, child, pos + (direction * length / 2).Rotate(rotateAngle), creatureScale, visualScale);
+            }
+            for (int i = 0; i < LeftEarParts.Count; i++)
+            {
+                BodyPart child = LeftEarParts[i];
+                double rotateAngle = 0;
+                if (part.IsLowerBody)
+                    if (root)
+                        rotateAngle = Range(i, LeftEarParts.Count, 45, 135);
+                    else
+                        rotateAngle = Range(i, LeftEarParts.Count, -20, -90);
+                else
+                    rotateAngle = Range(i, LeftEarParts.Count, 45, 90);
+                AddPart(canvas, pos, child, pos + (direction * length / 2).Rotate(rotateAngle), creatureScale, visualScale);
+            }
+            for (int i = 0; i < RightEarParts.Count; i++)
+            {
+                BodyPart child = RightEarParts[i];
+                double rotateAngle = 0;
+                if (part.IsLowerBody)
+                    if (root)
+                        rotateAngle = Range(i, RightEarParts.Count, -45, -135);
+                    else
+                        rotateAngle = Range(i, RightEarParts.Count, 20, 90);
+                else
+                    rotateAngle = Range(i, RightEarParts.Count, -45, -90);
+                AddPart(canvas, pos, child, pos + (direction * length / 2).Rotate(rotateAngle), creatureScale, visualScale);
             }
             for (int i = 0; i < EmbeddedParts.Count; i++)
             {
                 BodyPart child = EmbeddedParts[i];
                 Vector childPos = direction;
                 childPos = childPos.Rotate(90);
-                childPos *= Range(i, EmbeddedParts.Count, -dia / 4, dia / 4);
+                childPos *= Range(i, EmbeddedParts.Count, -length / 4, length / 4);
                 AddPart(canvas, pos, child, pos + childPos, creatureScale, visualScale, true);
             }
             for (int i = 0; i < EyelidParts.Count; i++)
@@ -434,23 +516,23 @@ namespace Dwarf_Portrait
                 BodyPart child = EyelidParts[i];
                 Vector childPos = direction;
                 childPos = childPos.Rotate(90);
-                childPos *= Range(i, EyelidParts.Count, -dia * 0.2, dia * 0.2);
-                AddPart(canvas, pos, child, pos + childPos + direction * dia * 0.1, creatureScale, visualScale, true);
+                childPos *= Range(i, EyelidParts.Count, -length * 0.2, length * 0.2);
+                AddPart(canvas, pos, child, pos + childPos + direction * length * 0.1, creatureScale, visualScale, true);
             }
             for (int i = 0; i < CheekParts.Count; i++)
             {
                 BodyPart child = CheekParts[i];
                 Vector childPos = direction;
                 childPos = childPos.Rotate(90);
-                childPos *= Range(i, CheekParts.Count, -dia * 0.2, dia * 0.2);
-                AddPart(canvas, pos, child, pos + childPos + direction * dia * -0.2, creatureScale, visualScale, true);
+                childPos *= Range(i, CheekParts.Count, -length * 0.2, length * 0.2);
+                AddPart(canvas, pos, child, pos + childPos + direction * length * -0.2, creatureScale, visualScale, true);
             }
             for (int i = 0; i < EyeParts.Count; i++)
             {
                 BodyPart child = EyeParts[i];
                 Vector childPos = direction;
                 childPos = childPos.Rotate(90);
-                childPos *= Range(i, EyeParts.Count, -dia * 0.2, dia * 0.2);
+                childPos *= Range(i, EyeParts.Count, -length * 0.2, length * 0.2);
                 AddPart(canvas, pos, child, pos + childPos, creatureScale, visualScale, true);
             }
             for (int i = 0; i < MouthParts.Count; i++)
@@ -459,7 +541,7 @@ namespace Dwarf_Portrait
                 Vector childPos = direction;
                 childPos = childPos.Rotate(180);
                 childPos.Normalize();
-                childPos *= dia / 2;
+                childPos *= length / 2;
                 childPos *= Range(i, MouthParts.Count, 0.75, 0.5);
                 AddPart(canvas, pos, child, pos + childPos, creatureScale, visualScale, true);
             }
@@ -469,9 +551,17 @@ namespace Dwarf_Portrait
                 Vector childPos = direction;
                 childPos = childPos.Rotate(180);
                 childPos.Normalize();
-                childPos *= dia / 2;
+                childPos *= length / 2;
                 childPos *= Range(i, LipParts.Count, 0.75, 0.5);
                 AddPart(canvas, pos, child, pos + childPos, creatureScale, visualScale, true);
+            }
+            for (int i = 0; i < TuskParts.Count; i++)
+            {
+                BodyPart child = TuskParts[i];
+                Vector childPos = direction;
+                childPos = childPos.Rotate(90);
+                childPos *= Range(i, TuskParts.Count, -length * 0.2, length * 0.2);
+                AddPart(canvas, pos, child, pos + childPos + direction * length * 0.5 * -0.75, creatureScale, visualScale, true);
             }
             for (int i = 0; i < NoseParts.Count; i++)
             {
@@ -479,7 +569,7 @@ namespace Dwarf_Portrait
                 Vector childPos = direction;
                 childPos = childPos.Rotate(180);
                 childPos.Normalize();
-                childPos *= dia / 2;
+                childPos *= length / 2;
                 childPos *= Range(i, NoseParts.Count, 0.1, 0.5);
                 AddPart(canvas, pos, child, pos + childPos, creatureScale, visualScale, true);
             }

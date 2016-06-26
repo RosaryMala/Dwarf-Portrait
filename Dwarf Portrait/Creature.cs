@@ -69,8 +69,6 @@ namespace Dwarf_Portrait
                             BodypartTree.Add(part);
                         else
                         {
-                            if (BodyPartList[part.OriginalPart.parent].Children == null)
-                                BodyPartList[part.OriginalPart.parent].Children = new List<BodyPart>();
                             BodyPartList[part.OriginalPart.parent].Children.Add(part);
                         }
                     }

@@ -9,6 +9,7 @@ namespace Dwarf_Portrait
         {
             Layers = new List<BodyPartLayer>();
             AppearanceMods = new List<BodyPartMod>();
+            Children = new List<BodyPart>();
         }
         public BodyPartRaw OriginalPart { get; set; }
         public List<BodyPart> Children { get; set; }
@@ -26,6 +27,62 @@ namespace Dwarf_Portrait
                 else
                     return
                         OriginalPart.flags[(int)UnitFlags.body_part_raw_flags.INTERNAL];
+            }
+        }
+        public bool IsHead
+        {
+            get
+            {
+                if (OriginalPart == null)
+                    return false;
+                else
+                    return
+                        OriginalPart.flags[(int)UnitFlags.body_part_raw_flags.HEAD];
+            }
+        }
+        public bool IsLeft
+        {
+            get
+            {
+                if (OriginalPart == null)
+                    return false;
+                else
+                    return
+                        OriginalPart.flags[(int)UnitFlags.body_part_raw_flags.LEFT];
+            }
+        }
+        public bool IsRight
+        {
+            get
+            {
+                if (OriginalPart == null)
+                    return false;
+                else
+                    return
+                        OriginalPart.flags[(int)UnitFlags.body_part_raw_flags.RIGHT];
+            }
+        }
+        public bool IsLowerBody
+        {
+            get
+            {
+                if (OriginalPart == null)
+                    return false;
+                else
+                    return
+                        OriginalPart.flags[(int)UnitFlags.body_part_raw_flags.LOWERBODY];
+            }
+        }
+
+        public bool IsEmbedded
+        {
+            get
+            {
+                if (OriginalPart == null)
+                    return false;
+                else
+                    return
+                        OriginalPart.flags[(int)UnitFlags.body_part_raw_flags.EMBEDDED];
             }
         }
     }

@@ -9,7 +9,7 @@ namespace Dwarf_Portrait
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is int)
-                return Math.Pow((int)value * 10 * 6 / Math.PI, 1.0 / 3.0);
+                return Convert((int)value);
             else
                 return value;
         }
@@ -20,6 +20,11 @@ namespace Dwarf_Portrait
                 return (int)(Math.Pow(((double)value), 3.0) * Math.PI / 6.0);
             else
                 return value;
+        }
+
+        public static double Convert(double value)
+        {
+            return Math.Pow(value * 10 * 6 / Math.PI, 1.0 / 3.0);
         }
     }
 }

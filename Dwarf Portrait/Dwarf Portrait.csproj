@@ -106,7 +106,8 @@
     <Compile Include="ColorPattern.cs" />
     <Compile Include="ColorPatternTemplateSelector.cs" />
     <Compile Include="Creature.cs" />
-    <Compile Include="CubeRootConverter.cs" />
+    <Compile Include="VectorExt.cs" />
+    <Compile Include="VolumeToDiameterConverter.cs" />
     <Compile Include="DFConnection.cs" />
     <Compile Include="RemoteClientDF\Basic.cs" />
     <Compile Include="RemoteClientDF\BasicApi.cs" />

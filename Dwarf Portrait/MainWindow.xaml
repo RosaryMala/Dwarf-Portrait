@@ -409,34 +409,23 @@
                     </Grid>
                 </Grid>
             </TabItem>
-            <!--<TabItem Header="Portrait">
-                <Canvas>
-                    <Border Width="24" Height="16" BorderBrush="Black" BorderThickness="1,1,1,1">
-                        <Grid Background="Orange">
-                            <Ellipse Height="3" Width="3" Fill="Black" Margin="1,1,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-                            <Ellipse Height="3" Width="3" Fill="Black" Margin="2,6,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-                            <Ellipse Height="3" Width="3" Fill="Black" Margin="1,10,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-                            <Ellipse Height="3" Width="3" Fill="Black" Margin="6,9,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-                            <Ellipse Height="3" Width="3" Fill="Black" Margin="6,3,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-                            <Ellipse Height="3" Width="3" Fill="Black" Margin="10,6,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-                            <Ellipse Height="3" Width="3" Fill="Black" Margin="10,1,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-                            <Ellipse Height="3" Width="3" Fill="Black" Margin="11,10,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-                            <Ellipse Height="3" Width="3" Fill="Black" Margin="14,7,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-                            <Ellipse Height="3" Width="3" Fill="Black" Margin="17,10,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-                            <Ellipse Height="3" Width="3" Fill="Black" Margin="18,5,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-                            <Ellipse Height="3" Width="3" Fill="Black" Margin="14,2,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-                            <Ellipse Height="3" Width="3" Fill="Black" Margin="18,1,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-                        </Grid>
-                    </Border>
-
-                    <Border Width="23" Height="12" BorderBrush="Black" BorderThickness="1,1,1,1" Canvas.Top="21">
-                        <Grid >
-                            <Ellipse Height="14" Width="14" Fill="{Binding Colors[3]}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                            <Ellipse Height="7" Width="7" Fill="Black" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Grid>
-                    </Border>
-                </Canvas>
-            </TabItem>-->
+            <TabItem Header="Portrait">
+                <Border BorderBrush="#FFABADB3" Margin="10" BorderThickness="1">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Canvas x:Name="portraitCanvas" DataContextChanged="portraitCanvas_DataContextChanged" Grid.Column="1" Grid.Row="1"/>
+                        <Slider x:Name="portraitZoomSlider" HorizontalAlignment="Right" Margin="10" Grid.Row="1"  Grid.Column="1" VerticalAlignment="Bottom" TickPlacement="BottomRight" Width="200" ToolTip="Zoom" ValueChanged="portraitZoomSlider_ValueChanged" Minimum="-2" IsSnapToTickEnabled="True" Maximum="7"/>
+                        <TextBlock x:Name="portraitZoomTextBlock" Grid.Column="1" Margin="0,0,215,10" Grid.Row="1" TextWrapping="Wrap" Text="0" Height="24" VerticalAlignment="Bottom" HorizontalAlignment="Right"/>
+                    </Grid>
+                </Border>
+            </TabItem>
         </TabControl>
         <TextBox x:Name="unitFilterTextbox" Grid.Column="2" Height="23" Margin="54,10,10,0" TextWrapping="Wrap" VerticalAlignment="Top" TextChanged="unitFilterTextbox_TextChanged"/>
         <Label x:Name="label" Content="Filter:" Grid.Column="2" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="23"/>

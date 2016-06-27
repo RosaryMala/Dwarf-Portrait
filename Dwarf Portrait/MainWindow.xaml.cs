@@ -224,13 +224,29 @@ namespace Dwarf_Portrait
             double shift = 0;
             double scale = ((double)creature.Size / creature.CasteRaw.total_relsize);
 
+            Vector sizeMod = new Vector(1, 1);
+
+            foreach (BodyPartMod mod in creature.AppearanceMods)
+            {
+                switch (mod.Original.type)
+                {
+                    case "HEIGHT":
+                        sizeMod.Y *= (mod.CurrentValue / 100.0);
+                        break;
+                    case "BROADNESS":
+                        sizeMod.X *= (mod.CurrentValue / 100.0);
+                        break;
+                    default:
+                        break;
+                }
+            }
 
             foreach (BodyPart part in creature.BodypartTree)
             {
                 if (part.IsInternal)
                     continue;
 
-                AddPart(canvas, new Vector(0, 0), part, new Vector(shift, 0), scale, zoomLevel);
+                AddPart(canvas, new Vector(0, 0), part, new Vector(shift, 0), scale, zoomLevel, sizeMod);
 
                 shift += 5;
             }
@@ -244,7 +260,7 @@ namespace Dwarf_Portrait
             return (cubeRootSquare2 * Math.Pow(volume, 1.0 / 3.0)) / (cubeRootPi * Math.Pow(ratio, 1.0 / 3.0));
         }
 
-        private static void AddPart(Canvas canvas, Vector parentPos, BodyPart part, Vector pos, double creatureScale, double visualScale, bool centered = false)
+        private static void AddPart(Canvas canvas, Vector parentPos, BodyPart part, Vector pos, double creatureScale, double visualScale, Vector sizeMod, bool centered = false)
         {
             Shape partShape;
 
@@ -268,9 +284,7 @@ namespace Dwarf_Portrait
                     headDia *= 0.75;
                     double neckArea = Math.PI * (headDia / 2) * (headDia / 2);
                     length = ((part.OriginalPart.relsize * creatureScale) / neckArea) * visualScale;
-                    partShape.Width = headDia * visualScale;
-                    partShape.Height = length;
-
+                    width = headDia * visualScale;
                     break;
                 case "LEG_UPPER":
                 case "LEG_LOWER":
@@ -282,20 +296,12 @@ namespace Dwarf_Portrait
 
                     width = GetRatioCylinderWidth(part.OriginalPart.relsize * creatureScale, 2.5) * visualScale;
                     length = width * 2.5;
-
-                    partShape.Width = width;
-                    partShape.Height = length;
-
                     break;
                 case "TAIL":
                     partShape = new Rectangle();
 
                     width = GetRatioCylinderWidth(part.OriginalPart.relsize * creatureScale, 3) * visualScale;
                     length = width * 3;
-
-                    partShape.Width = width;
-                    partShape.Height = length;
-
                     break;
                 case "HORN":
                 case "TUSK":
@@ -303,10 +309,6 @@ namespace Dwarf_Portrait
 
                     width = GetRatioCylinderWidth(part.OriginalPart.relsize * creatureScale, 3) * visualScale;
                     length = width * 3;
-
-                    partShape.Width = width;
-                    partShape.Height = length;
-
                     break;
                 case "BODY_UPPER":
                 case "BODY_LOWER":
@@ -324,9 +326,6 @@ namespace Dwarf_Portrait
 
                     width = GetRatioCylinderWidth(part.OriginalPart.relsize * creatureScale, 3) * visualScale;
                     length = width * 3;
-
-                    partShape.Width = width;
-                    partShape.Height = length;
                     break;
                 case "RIB_TRUE":
                 case "RIB_FALSE":
@@ -335,9 +334,23 @@ namespace Dwarf_Portrait
 
                     width = GetRatioCylinderWidth(part.OriginalPart.relsize * creatureScale, 0.2) * visualScale;
                     length = width * 0.2;
+                    break;
+                case "LIP":
+                    partShape = new Rectangle();
 
-                    partShape.Width = width;
-                    partShape.Height = length;
+                    width = GetRatioCylinderWidth(part.OriginalPart.relsize * creatureScale, 0.2) * visualScale;
+                    length = width * 0.2;
+                    foreach (BodyPartMod mod in part.AppearanceMods)
+                    {
+                        switch (mod.Original.type)
+                        {
+                            case "THICKNESS":
+                                length *= (mod.CurrentValue / 100.0);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
                     break;
                 case "TENTACLE":
                 case "ANTENNA":
@@ -348,27 +361,48 @@ namespace Dwarf_Portrait
 
                     width = GetRatioCylinderWidth(part.OriginalPart.relsize * creatureScale, 5) * visualScale;
                     length = width * 5;
-
-                    partShape.Width = width;
-                    partShape.Height = length;
                     break;
                 case "WING":
                     partShape = new Ellipse();
 
                     length = VolumeToDiameterConverter.Convert(part.OriginalPart.relsize * creatureScale) * visualScale * 3;
-
-                    partShape.Width = length * 2.0 / 3.0;
-                    partShape.Height = length;
+                    width = length * 2.0 / 3.0;
                     break;
                 default:
                     partShape = new Ellipse();
 
                     length = VolumeToDiameterConverter.Convert(part.OriginalPart.relsize * creatureScale) * visualScale;
-
-                    partShape.Width = length;
-                    partShape.Height = length;
+                    width = length;
                     break;
             }
+
+            foreach (BodyPartMod mod in part.AppearanceMods)
+            {
+                switch (mod.Original.type)
+                {
+                    case "HEIGHT":
+                        sizeMod.Y *= (mod.CurrentValue / 100.0);
+                        break;
+                    case "BROADNESS":
+                        sizeMod.X *= (mod.CurrentValue / 100.0);
+                        break;
+                    case "ROUND_VS_NARROW":
+                        sizeMod.X = 0.05 + (mod.CurrentValue * 0.0045);
+                        sizeMod.Y = 1;
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            width *= sizeMod.X;
+            length *= sizeMod.Y;
+
+            partShape.Width = width;
+            partShape.Height = length;
+
+            partShape.Measure(new Size(1000, 1000));
+            partShape.Arrange(new Rect(0, 0, 1000, 1000));
 
             Vector localPos = pos - parentPos;
             RotateTransform rotation = new RotateTransform(-Math.Atan2(localPos.X, localPos.Y) * 180 / Math.PI, partShape.Width / 2, partShape.Height / 2);
@@ -422,39 +456,64 @@ namespace Dwarf_Portrait
 
             if (usedLayer.ColorMod != null)
             {
-                if (usedLayer.ColorMod.CurrentPatterns[0].Pattern == RemoteFortressReader.PatternType.IRIS_EYE)
+                switch (usedLayer.ColorMod.CurrentPatterns[0].Pattern)
                 {
-                    Ellipse iris = new Ellipse();
-                    iris.Width = length * 2 / 3;
-                    iris.Height = length * 2 / 3;
-                    Canvas.SetLeft(iris, (-iris.Width / 2) + pos.X);
-                    Canvas.SetTop(iris, (-iris.Height / 2) + pos.Y);
-                    var color = usedLayer.ColorMod.CurrentPatterns[0].Original.colors[2];
-                    iris.Fill = new SolidColorBrush(Color.FromRgb((byte)color.red, (byte)color.green, (byte)color.blue));
-                    iris.ToolTip = partShape.ToolTip;
+                    case RemoteFortressReader.PatternType.MONOTONE:
+                        break;
+                    case RemoteFortressReader.PatternType.STRIPES:
+                        {
+                            var stripeBrush = new LinearGradientBrush();
+                            for(int i = 0; i <= 10; i++)
+                            {
+                                var color = usedLayer.ColorMod.CurrentPatterns[0].Original.colors[i % usedLayer.ColorMod.CurrentPatterns[0].Original.colors.Count];
+                                var stripeColor = Color.FromRgb((byte)color.red, (byte)color.green, (byte)color.blue);
+                                stripeBrush.GradientStops.Add(new GradientStop(stripeColor, i / 10.0));
+                            }
+                            partShape.Fill = stripeBrush;
+                        }
+                        break;
+                    case RemoteFortressReader.PatternType.IRIS_EYE:
+                        {
+                            var color = usedLayer.ColorMod.CurrentPatterns[0].Original.colors[2];
+                            var irisColor = Color.FromRgb((byte)color.red, (byte)color.green, (byte)color.blue);
+                            color = usedLayer.ColorMod.CurrentPatterns[0].Original.colors[1];
+                            var pupilColor = Color.FromRgb((byte)color.red, (byte)color.green, (byte)color.blue);
+                            var eyeBrush = new RadialGradientBrush();
+                            eyeBrush.GradientStops.Add(new GradientStop(pupilColor, 0));
+                            eyeBrush.GradientStops.Add(new GradientStop(pupilColor, 0.2));
+                            eyeBrush.GradientStops.Add(new GradientStop(irisColor, 0.21));
+                            eyeBrush.GradientStops.Add(new GradientStop(irisColor, 0.5));
+                            eyeBrush.GradientStops.Add(new GradientStop(fillColor, 0.51));
+                            eyeBrush.GradientStops.Add(new GradientStop(fillColor, 1));
 
-                    canvas.Children.Add(iris);
-                    Ellipse pupil = new Ellipse();
-                    pupil.Width = length / 3;
-                    pupil.Height = length / 3;
-                    Canvas.SetLeft(pupil, (-pupil.Width / 2) + pos.X);
-                    Canvas.SetTop(pupil, (-pupil.Height / 2) + pos.Y);
-                    var pupilColor = usedLayer.ColorMod.CurrentPatterns[0].Original.colors[1];
-                    pupil.Fill = new SolidColorBrush(Color.FromRgb((byte)pupilColor.red, (byte)pupilColor.green, (byte)pupilColor.blue));
-                    pupil.ToolTip = partShape.ToolTip;
-                    canvas.Children.Add(pupil);
-                }
-                if (usedLayer.ColorMod.CurrentPatterns[0].Pattern == RemoteFortressReader.PatternType.PUPIL_EYE)
-                {
-                    Ellipse pupil = new Ellipse();
-                    pupil.Width = length / 3;
-                    pupil.Height = length / 3;
-                    Canvas.SetLeft(pupil, (-pupil.Width / 2) + pos.X);
-                    Canvas.SetTop(pupil, (-pupil.Height / 2) + pos.Y);
-                    var pupilColor = usedLayer.ColorMod.CurrentPatterns[0].Original.colors[1];
-                    pupil.Fill = new SolidColorBrush(Color.FromRgb((byte)pupilColor.red, (byte)pupilColor.green, (byte)pupilColor.blue));
-                    pupil.ToolTip = partShape.ToolTip;
-                    canvas.Children.Add(pupil);
+                            eyeBrush.RadiusX = length / width * 0.5;
+                            eyeBrush.RadiusY = 0.5;
+
+                            partShape.Fill = eyeBrush;
+                        }
+                        break;
+                    case RemoteFortressReader.PatternType.SPOTS:
+                        break;
+                    case RemoteFortressReader.PatternType.PUPIL_EYE:
+                        {
+                            var color = usedLayer.ColorMod.CurrentPatterns[0].Original.colors[1];
+                            var pupilColor = Color.FromRgb((byte)color.red, (byte)color.green, (byte)color.blue);
+                            var eyeBrush = new RadialGradientBrush();
+                            eyeBrush.GradientStops.Add(new GradientStop(pupilColor, 0));
+                            eyeBrush.GradientStops.Add(new GradientStop(pupilColor, 0.2));
+                            eyeBrush.GradientStops.Add(new GradientStop(fillColor, 0.21));
+                            eyeBrush.GradientStops.Add(new GradientStop(fillColor, 1));
+
+                            eyeBrush.RadiusX = length / width * 0.5;
+                            eyeBrush.RadiusY = 0.5;
+
+                            partShape.Fill = eyeBrush;
+                        }
+                        break;
+                    case RemoteFortressReader.PatternType.MOTTLED:
+                        break;
+                    default:
+                        break;
                 }
             }
 
@@ -543,13 +602,13 @@ namespace Dwarf_Portrait
                     rotateAngle = Range(i, ExternalParts.Count, -45, 45);
                 else
                     rotateAngle = Range(i, ExternalParts.Count, 45, -45);
-                AddPart(canvas, pos, child, pos + (direction * length / 2).Rotate(rotateAngle), creatureScale, visualScale);
+                AddPart(canvas, pos, child, pos + (direction * length / 2).Rotate(rotateAngle), creatureScale, visualScale, sizeMod);
             }
             for (int i = 0; i < LowerBodyParts.Count; i++)
             {
                 BodyPart child = LowerBodyParts[i];
                 double rotateAngle = Range(i, LowerBodyParts.Count, 135, 225);
-                AddPart(canvas, pos, child, pos + (direction * length / 2).Rotate(rotateAngle), creatureScale, visualScale);
+                AddPart(canvas, pos, child, pos + (direction * length / 2).Rotate(rotateAngle), creatureScale, visualScale, sizeMod);
             }
             for (int i = 0; i < LeftParts.Count; i++)
             {
@@ -562,7 +621,7 @@ namespace Dwarf_Portrait
                         rotateAngle = Range(i, LeftParts.Count, -20, -40);
                 else
                     rotateAngle = Range(i, LeftParts.Count, 45, 90);
-                AddPart(canvas, pos, child, pos + (direction * length / 2).Rotate(rotateAngle), creatureScale, visualScale);
+                AddPart(canvas, pos, child, pos + (direction * length / 2).Rotate(rotateAngle), creatureScale, visualScale, sizeMod);
             }
             for (int i = 0; i < RightParts.Count; i++)
             {
@@ -575,7 +634,7 @@ namespace Dwarf_Portrait
                         rotateAngle = Range(i, RightParts.Count, 20, 40);
                 else
                     rotateAngle = Range(i, RightParts.Count, -45, -90);
-                AddPart(canvas, pos, child, pos + (direction * length / 2).Rotate(rotateAngle), creatureScale, visualScale);
+                AddPart(canvas, pos, child, pos + (direction * length / 2).Rotate(rotateAngle), creatureScale, visualScale, sizeMod);
             }
             for (int i = 0; i < LeftEarParts.Count; i++)
             {
@@ -588,7 +647,7 @@ namespace Dwarf_Portrait
                         rotateAngle = Range(i, LeftEarParts.Count, -20, -90);
                 else
                     rotateAngle = Range(i, LeftEarParts.Count, 45, 90);
-                AddPart(canvas, pos, child, pos + (direction * length / 2).Rotate(rotateAngle), creatureScale, visualScale);
+                AddPart(canvas, pos, child, pos + (direction * length / 2).Rotate(rotateAngle), creatureScale, visualScale, sizeMod);
             }
             for (int i = 0; i < RightEarParts.Count; i++)
             {
@@ -601,7 +660,7 @@ namespace Dwarf_Portrait
                         rotateAngle = Range(i, RightEarParts.Count, 20, 90);
                 else
                     rotateAngle = Range(i, RightEarParts.Count, -45, -90);
-                AddPart(canvas, pos, child, pos + (direction * length / 2).Rotate(rotateAngle), creatureScale, visualScale);
+                AddPart(canvas, pos, child, pos + (direction * length / 2).Rotate(rotateAngle), creatureScale, visualScale, sizeMod);
             }
             for (int i = 0; i < EmbeddedParts.Count; i++)
             {
@@ -609,7 +668,7 @@ namespace Dwarf_Portrait
                 Vector childPos = direction;
                 childPos = childPos.Rotate(90);
                 childPos *= Range(i, EmbeddedParts.Count, -length / 4, length / 4);
-                AddPart(canvas, pos, child, pos + childPos, creatureScale, visualScale, true);
+                AddPart(canvas, pos, child, pos + childPos, creatureScale, visualScale, sizeMod, true);
             }
             for (int i = 0; i < EyelidParts.Count; i++)
             {
@@ -617,7 +676,7 @@ namespace Dwarf_Portrait
                 Vector childPos = direction;
                 childPos = childPos.Rotate(90);
                 childPos *= Range(i, EyelidParts.Count, -length * 0.2, length * 0.2);
-                AddPart(canvas, pos, child, pos + childPos + direction * length * 0.1, creatureScale, visualScale, true);
+                AddPart(canvas, pos, child, pos + childPos + direction * length * 0.1, creatureScale, visualScale, sizeMod, true);
             }
             for (int i = 0; i < CheekParts.Count; i++)
             {
@@ -625,7 +684,7 @@ namespace Dwarf_Portrait
                 Vector childPos = direction;
                 childPos = childPos.Rotate(90);
                 childPos *= Range(i, CheekParts.Count, -length * 0.2, length * 0.2);
-                AddPart(canvas, pos, child, pos + childPos + direction * length * -0.2, creatureScale, visualScale, true);
+                AddPart(canvas, pos, child, pos + childPos + direction * length * -0.2, creatureScale, visualScale, sizeMod, true);
             }
             for (int i = 0; i < EyeParts.Count; i++)
             {
@@ -633,7 +692,7 @@ namespace Dwarf_Portrait
                 Vector childPos = direction;
                 childPos = childPos.Rotate(90);
                 childPos *= Range(i, EyeParts.Count, -length * 0.2, length * 0.2);
-                AddPart(canvas, pos, child, pos + childPos, creatureScale, visualScale, true);
+                AddPart(canvas, pos, child, pos + childPos, creatureScale, visualScale, sizeMod, true);
             }
             for (int i = 0; i < MouthParts.Count; i++)
             {
@@ -643,7 +702,7 @@ namespace Dwarf_Portrait
                 childPos.Normalize();
                 childPos *= length / 2;
                 childPos *= Range(i, MouthParts.Count, 0.75, 0.5);
-                AddPart(canvas, pos, child, pos + childPos, creatureScale, visualScale, true);
+                AddPart(canvas, pos, child, pos + childPos, creatureScale, visualScale, sizeMod, true);
             }
             for (int i = 0; i < LipParts.Count; i++)
             {
@@ -652,8 +711,8 @@ namespace Dwarf_Portrait
                 childPos = childPos.Rotate(180);
                 childPos.Normalize();
                 childPos *= length / 2;
-                childPos *= Range(i, LipParts.Count, 0.75, 0.5);
-                AddPart(canvas, pos, child, pos + childPos, creatureScale, visualScale, true);
+                childPos *= Range(i, LipParts.Count, 0.75, 0.6);
+                AddPart(canvas, pos, child, pos + childPos, creatureScale, visualScale, sizeMod, true);
             }
             for (int i = 0; i < TuskParts.Count; i++)
             {
@@ -661,7 +720,7 @@ namespace Dwarf_Portrait
                 Vector childPos = direction;
                 childPos = childPos.Rotate(90);
                 childPos *= Range(i, TuskParts.Count, -length * 0.2, length * 0.2);
-                AddPart(canvas, pos, child, pos + childPos + direction * length * 0.5 * -0.75, creatureScale, visualScale, true);
+                AddPart(canvas, pos, child, pos + childPos + direction * length * 0.5 * -0.75, creatureScale, visualScale, sizeMod, true);
             }
             for (int i = 0; i < NoseParts.Count; i++)
             {
@@ -671,7 +730,7 @@ namespace Dwarf_Portrait
                 childPos.Normalize();
                 childPos *= length / 2;
                 childPos *= Range(i, NoseParts.Count, 0.1, 0.5);
-                AddPart(canvas, pos, child, pos + childPos, creatureScale, visualScale, true);
+                AddPart(canvas, pos, child, pos + childPos, creatureScale, visualScale, sizeMod, true);
             }
         }
 

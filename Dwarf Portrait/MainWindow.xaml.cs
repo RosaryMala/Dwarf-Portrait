@@ -236,11 +236,20 @@ namespace Dwarf_Portrait
             }
         }
 
+        static readonly double cubeRootPi = Math.Pow(Math.PI, 1.0 / 3.0);
+        static readonly double cubeRootSquare2 = Math.Pow(2.0, 2.0 / 3.0);
+
+        static double GetRatioCylinderWidth(double volume, double ratio)
+        {
+            return (cubeRootSquare2 * Math.Pow(volume, 1.0 / 3.0)) / (cubeRootPi * Math.Pow(ratio, 1.0 / 3.0));
+        }
+
         private static void AddPart(Canvas canvas, Vector parentPos, BodyPart part, Vector pos, double creatureScale, double visualScale, bool centered = false)
         {
             Shape partShape;
 
             double length;
+            double width;
 
             switch (part.OriginalPart.category)
             {
@@ -256,16 +265,89 @@ namespace Dwarf_Portrait
                             break;
                         }
                     }
-                    headDia /= 3;
+                    headDia *= 0.75;
                     double neckArea = Math.PI * (headDia / 2) * (headDia / 2);
                     length = ((part.OriginalPart.relsize * creatureScale) / neckArea) * visualScale;
                     partShape.Width = headDia * visualScale;
                     partShape.Height = length;
-                    Vector localPos = pos - parentPos;
-                    RotateTransform rotation = new RotateTransform(-Math.Atan2(localPos.X, localPos.Y) * 180 / Math.PI, partShape.Width/2, partShape.Height/2);
 
-                    partShape.RenderTransform = rotation;
+                    break;
+                case "LEG_UPPER":
+                case "LEG_LOWER":
+                case "LEG_FRONT":
+                case "LEG_REAR":
+                case "ARM_UPPER":
+                case "ARM_LOWER":
+                    partShape = new Rectangle();
 
+                    width = GetRatioCylinderWidth(part.OriginalPart.relsize * creatureScale, 2.5) * visualScale;
+                    length = width * 2.5;
+
+                    partShape.Width = width;
+                    partShape.Height = length;
+
+                    break;
+                case "TAIL":
+                    partShape = new Rectangle();
+
+                    width = GetRatioCylinderWidth(part.OriginalPart.relsize * creatureScale, 3) * visualScale;
+                    length = width * 3;
+
+                    partShape.Width = width;
+                    partShape.Height = length;
+
+                    break;
+                case "HORN":
+                case "TUSK":
+                    partShape = new Rectangle();
+
+                    width = GetRatioCylinderWidth(part.OriginalPart.relsize * creatureScale, 3) * visualScale;
+                    length = width * 3;
+
+                    partShape.Width = width;
+                    partShape.Height = length;
+
+                    break;
+                case "BODY_UPPER":
+                case "BODY_LOWER":
+                case "MANDIBLE":
+                    partShape = new Rectangle();
+
+                    width = GetRatioCylinderWidth(part.OriginalPart.relsize * creatureScale, 1) * visualScale;
+                    length = width * 1;
+
+                    partShape.Width = width;
+                    partShape.Height = length;
+                    break;
+                case "FINGER":
+                    partShape = new Rectangle();
+
+                    width = GetRatioCylinderWidth(part.OriginalPart.relsize * creatureScale, 3) * visualScale;
+                    length = width * 3;
+
+                    partShape.Width = width;
+                    partShape.Height = length;
+                    break;
+                case "TENTACLE":
+                case "ANTENNA":
+                case "ARM":
+                case "LEG":
+                case "STINGER":
+                    partShape = new Rectangle();
+
+                    width = GetRatioCylinderWidth(part.OriginalPart.relsize * creatureScale, 5) * visualScale;
+                    length = width * 5;
+
+                    partShape.Width = width;
+                    partShape.Height = length;
+                    break;
+                case "WING":
+                    partShape = new Ellipse();
+
+                    length = VolumeToDiameterConverter.Convert(part.OriginalPart.relsize * creatureScale) * visualScale * 3;
+
+                    partShape.Width = length * 2.0 / 3.0;
+                    partShape.Height = length;
                     break;
                 default:
                     partShape = new Ellipse();
@@ -276,6 +358,12 @@ namespace Dwarf_Portrait
                     partShape.Height = length;
                     break;
             }
+
+            Vector localPos = pos - parentPos;
+            RotateTransform rotation = new RotateTransform(-Math.Atan2(localPos.X, localPos.Y) * 180 / Math.PI, partShape.Width / 2, partShape.Height / 2);
+
+            partShape.RenderTransform = rotation;
+
 
             if (!centered)
             {
@@ -317,7 +405,7 @@ namespace Dwarf_Portrait
 
             partShape.Fill = new SolidColorBrush(fillColor);
 
-            partShape.ToolTip = part.OriginalPart.token + " - " + part.OriginalPart.category;
+            partShape.ToolTip = part.OriginalPart.token + " - " + part.OriginalPart.category + " - " + part.OriginalPart.relsize;
 
             canvas.Children.Add(partShape);
 
@@ -405,6 +493,7 @@ namespace Dwarf_Portrait
                             CheekParts.Add(child);
                             break;
                         case "TUSK":
+                        case "MANDIBLE":
                             TuskParts.Add(child);
                             break;
                         case "EAR":

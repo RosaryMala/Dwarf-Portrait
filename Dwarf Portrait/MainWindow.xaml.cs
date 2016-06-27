@@ -328,6 +328,17 @@ namespace Dwarf_Portrait
                     partShape.Width = width;
                     partShape.Height = length;
                     break;
+                case "RIB_TRUE":
+                case "RIB_FALSE":
+                case "RIB_FLOATING":
+                    partShape = new Rectangle();
+
+                    width = GetRatioCylinderWidth(part.OriginalPart.relsize * creatureScale, 0.2) * visualScale;
+                    length = width * 0.2;
+
+                    partShape.Width = width;
+                    partShape.Height = length;
+                    break;
                 case "TENTACLE":
                 case "ANTENNA":
                 case "ARM":

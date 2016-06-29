@@ -231,6 +231,7 @@ namespace Dwarf_Portrait
                 switch (mod.Original.type)
                 {
                     case "HEIGHT":
+                    case "LENGTH":
                         sizeMod.Y *= (mod.CurrentValue / 100.0);
                         break;
                     case "BROADNESS":
@@ -689,10 +690,19 @@ namespace Dwarf_Portrait
             for (int i = 0; i < EyeParts.Count; i++)
             {
                 BodyPart child = EyeParts[i];
+                double closeSet = 1;
+                foreach (BodyPartMod mod in child.AppearanceMods)
+                {
+                    if(mod.Original.type == "CLOSE_SET")
+                    {
+                        closeSet = (mod.CurrentValue / 100.0) + 0.001;
+                    }
+                }
                 Vector childPos = direction;
                 childPos = childPos.Rotate(90);
-                childPos *= Range(i, EyeParts.Count, -length * 0.2, length * 0.2);
-                AddPart(canvas, pos, child, pos + childPos, creatureScale, visualScale, sizeMod, true);
+                childPos *= Range(i, EyeParts.Count, -length * 0.1, length * 0.1);
+                childPos *= closeSet;
+                AddPart(canvas, pos, child, pos + childPos, creatureScale, visualScale, sizeMod, false);
             }
             for (int i = 0; i < MouthParts.Count; i++)
             {

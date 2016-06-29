@@ -275,7 +275,7 @@
                                             <TextBlock Text=": "/>
                                             <TextBlock Text="{Binding Original.mod_min}"/>
                                             <TextBlock Text="-"/>
-                                            <TextBlock Text="{Binding CurrentValue}"/>
+                                            <TextBox Text="{Binding CurrentValue}"/>
                                             <TextBlock Text="-"/>
                                             <TextBlock Text="{Binding Original.mod_max}"/>
                                         </WrapPanel>
@@ -312,7 +312,7 @@
                                                 <TextBlock Text=": "/>
                                                 <TextBlock Text="{Binding Original.mod_min}"/>
                                                 <TextBlock Text="-"/>
-                                                <TextBlock Text="{Binding CurrentValue}"/>
+                                                <TextBox Text="{Binding CurrentValue}"/>
                                                 <TextBlock Text="-"/>
                                                 <TextBlock Text="{Binding Original.mod_max}"/>
                                             </WrapPanel>

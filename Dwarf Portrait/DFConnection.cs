@@ -1,6 +1,7 @@
 ﻿using DFHack;
 using dfproto;
 using RemoteFortressReader;
+using System.Collections.Generic;
 
 namespace Dwarf_Portrait
 {
@@ -9,11 +10,14 @@ namespace Dwarf_Portrait
         // Remote bindings
         private RemoteFunction<EmptyMessage, UnitList> unitListCall;
         private RemoteFunction<EmptyMessage, CreatureRawList> creatureRawListCall;
+        private RemoteFunction<EmptyMessage, MaterialList> materialListCall;
         private color_ostream dfNetworkOut = new color_ostream();
         private RemoteClient networkClient;
 
         public UnitList unitList;
         public static CreatureRawList creatureRawList;
+        static MaterialList materialRawList;
+        public static Dictionary<MatPairStruct, MaterialDefinition> MaterialRaws { get; private set; }
 
         /// <summary>
         /// Tries to bind an RPC function, leaving returning null if it fails.
@@ -57,8 +61,9 @@ namespace Dwarf_Portrait
         /// </summary>
         void BindMethods()
         {
-            unitListCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.UnitList>(networkClient, "GetUnitList", "RemoteFortressReader");
-            creatureRawListCall = CreateAndBind<dfproto.EmptyMessage, RemoteFortressReader.CreatureRawList>(networkClient, "GetCreatureRaws", "RemoteFortressReader");
+            unitListCall = CreateAndBind<EmptyMessage, UnitList>(networkClient, "GetUnitList", "RemoteFortressReader");
+            creatureRawListCall = CreateAndBind<EmptyMessage, CreatureRawList>(networkClient, "GetCreatureRaws", "RemoteFortressReader");
+            materialListCall = CreateAndBind<EmptyMessage, MaterialList>(networkClient, "GetMaterialList", "RemoteFortressReader");
         }
 
         /// <summary>
@@ -83,6 +88,17 @@ namespace Dwarf_Portrait
             if(unitListCall != null)
             {
                 unitListCall.execute(null, out unitList);
+            }
+            if(materialListCall != null)
+            {
+                materialListCall.execute(null, out materialRawList);
+
+                MaterialRaws = new Dictionary<MatPairStruct, MaterialDefinition>();
+
+                foreach (var item in materialRawList.material_list)
+                {
+                    MaterialRaws[item.mat_pair] = item;
+                }
             }
 
             networkClient.disconnect();

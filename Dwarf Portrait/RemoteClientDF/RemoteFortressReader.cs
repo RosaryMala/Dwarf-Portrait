@@ -1919,6 +1919,48 @@ namespace RemoteFortressReader
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
   }
   
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"TissueRaw")]
+  public partial class TissueRaw : global::ProtoBuf.IExtensible
+  {
+    public TissueRaw() {}
+    
+    private string _id = "";
+    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"id", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue("")]
+    public string id
+    {
+      get { return _id; }
+      set { _id = value; }
+    }
+    private string _name = "";
+    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"name", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue("")]
+    public string name
+    {
+      get { return _name; }
+      set { _name = value; }
+    }
+    private RemoteFortressReader.MatPair _material = null;
+    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"material", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(null)]
+    public RemoteFortressReader.MatPair material
+    {
+      get { return _material; }
+      set { _material = value; }
+    }
+    private string _subordinate_to_tissue = "";
+    [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name=@"subordinate_to_tissue", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue("")]
+    public string subordinate_to_tissue
+    {
+      get { return _subordinate_to_tissue; }
+      set { _subordinate_to_tissue = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
   [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"CasteRaw")]
   public partial class CasteRaw : global::ProtoBuf.IExtensible
   {
@@ -2126,6 +2168,13 @@ namespace RemoteFortressReader
     public global::System.Collections.Generic.List<RemoteFortressReader.CasteRaw> caste
     {
       get { return _caste; }
+    }
+  
+    private readonly global::System.Collections.Generic.List<RemoteFortressReader.TissueRaw> _tissues = new global::System.Collections.Generic.List<RemoteFortressReader.TissueRaw>();
+    [global::ProtoBuf.ProtoMember(11, Name=@"tissues", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<RemoteFortressReader.TissueRaw> tissues
+    {
+      get { return _tissues; }
     }
   
     private global::ProtoBuf.IExtension extensionObject;

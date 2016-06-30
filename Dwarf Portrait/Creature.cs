@@ -13,6 +13,7 @@ namespace Dwarf_Portrait
             AppearanceMods = new List<BodyPartMod>();
             BodypartTree = new List<BodyPart>();
             BodyPartList = new List<BodyPart>();
+            TissueList = new List<CreatureTissue>();
         }
         private UnitDefinition _unitDefinition;
         public UnitDefinition unitDefinition {
@@ -47,6 +48,11 @@ namespace Dwarf_Portrait
 
                 if (CasteRaw != null)
                 {
+                    foreach (TissueRaw tissue in CreatureRaw.tissues)
+                    {
+                        CreatureTissue newTissue = new CreatureTissue(tissue);
+                        TissueList.Add(newTissue);
+                    }
                     for (int i = 0; i < CasteRaw.body_parts.Count; i++)
                     {
                         BodyPart part = new BodyPart();
@@ -57,6 +63,7 @@ namespace Dwarf_Portrait
                         {
                             BodyPartLayer layer = new BodyPartLayer();
                             layer.Original = originalLayer;
+                            layer.Tissue = TissueList[originalLayer.tissue_id];
                             part.Layers.Add(layer);
                         }
 
@@ -116,17 +123,15 @@ namespace Dwarf_Portrait
                             mod.CurrentValue = value.appearance.colors[i];
                         }
 
-                        for(int j = 0; j < mod.Original.body_part_id.Count; j++)
+                        for (int j = 0; j < mod.Original.body_part_id.Count; j++)
                         {
-                            if(mod.Original.tissue_layer_id[j] == -1)
+                            if (mod.Original.tissue_layer_id[j] == -1)
                             {
-                                if(BodyPartList[mod.Original.body_part_id[j]].ColorMod == null)
-                                    BodyPartList[mod.Original.body_part_id[j]].ColorMod = mod;
+                                BodyPartList[mod.Original.body_part_id[j]].ColorMod = mod;
                             }
                             else
                             {
-                                if(BodyPartList[mod.Original.body_part_id[j]].Layers[mod.Original.tissue_layer_id[j]].ColorMod == null)
-                                    BodyPartList[mod.Original.body_part_id[j]].Layers[mod.Original.tissue_layer_id[j]].ColorMod = mod;
+                                BodyPartList[mod.Original.body_part_id[j]].Layers[mod.Original.tissue_layer_id[j]].ColorMod = mod;
                             }
                         }
                     }
@@ -206,5 +211,7 @@ namespace Dwarf_Portrait
                     return unitDefinition.size_info.size_cur;
             }
         }
+
+        public List<CreatureTissue> TissueList { get; set; }
     }
 }

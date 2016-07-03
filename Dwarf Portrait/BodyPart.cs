@@ -85,5 +85,22 @@ namespace Dwarf_Portrait
                         OriginalPart.flags[(int)UnitFlags.body_part_raw_flags.EMBEDDED];
             }
         }
+
+        public bool LeadsToHead
+        {
+            get
+            {
+                if (IsHead)
+                    return true;
+                if (Children == null)
+                    return false;
+                foreach (BodyPart child in Children)
+                {
+                    if (child.LeadsToHead)
+                        return true;
+                }
+                return false;
+            }
+        }
     }
 }

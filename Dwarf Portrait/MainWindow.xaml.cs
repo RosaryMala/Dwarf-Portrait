@@ -369,6 +369,14 @@ namespace Dwarf_Portrait
                     length = VolumeToDiameterConverter.Convert(part.OriginalPart.relsize * creatureScale) * visualScale * 3;
                     width = length * 2.0 / 3.0;
                     break;
+                case "FIN":
+                case "FLIPPER":
+                case "CLAW":
+                    partShape = new Ellipse();
+
+                    length = VolumeToDiameterConverter.Convert(part.OriginalPart.relsize * creatureScale) * visualScale * 2;
+                    width = length * 2.0 / 3.0;
+                    break;
                 default:
                     partShape = new Ellipse();
 
@@ -453,8 +461,6 @@ namespace Dwarf_Portrait
 
             partShape.ToolTip = part.OriginalPart.token + " - " + part.OriginalPart.category + " - " + part.OriginalPart.relsize;
 
-            canvas.Children.Add(partShape);
-
             if (usedLayer.ColorMod != null)
             {
                 switch (usedLayer.ColorMod.CurrentPatterns[0].Pattern)
@@ -537,63 +543,138 @@ namespace Dwarf_Portrait
             List<BodyPart> TuskParts = new List<BodyPart>();
             List<BodyPart> LeftEarParts = new List<BodyPart>();
             List<BodyPart> RightEarParts = new List<BodyPart>();
+            List<BodyPart> HeadParts = new List<BodyPart>();
+            List<BodyPart> BackParts = new List<BodyPart>();
 
             foreach (var child in part.Children)
             {
                 if (!child.IsInternal)
                 {
-                    switch (child.OriginalPart.category)
-                    {
-                        case "EYE":
-                            EyeParts.Add(child);
-                            break;
-                        case "MOUTH":
-                        case "BEAK":
-                            MouthParts.Add(child);
-                            break;
-                        case "EYELID":
-                            EyelidParts.Add(child);
-                            break;
-                        case "LIP":
-                            LipParts.Add(child);
-                            break;
-                        case "NOSE":
-                            NoseParts.Add(child);
-                            break;
-                        case "CHEEK":
-                            CheekParts.Add(child);
-                            break;
-                        case "TUSK":
-                        case "MANDIBLE":
-                            TuskParts.Add(child);
-                            break;
-                        case "EAR":
-                            if (child.IsLeft)
-                                LeftEarParts.Add(child);
-                            else
-                                RightEarParts.Add(child);
-                            break;
-                        case "TOOTH":
-                        case "TONGUE":
-                        case "THROAT":
-                            break;
-                        default:
-                            if (child.IsLowerBody)
-                                LowerBodyParts.Add(child);
-                            else if (child.IsEmbedded)
-                                EmbeddedParts.Add(child);
-                            else if (child.IsLeft && !part.IsLeft)
-                                LeftParts.Add(child);
-                            else if (child.IsRight && !part.IsRight)
-                                RightParts.Add(child);
-                            else
-                                ExternalParts.Add(child);
-                            break;
-                    }
+                    if (child.LeadsToHead)
+                        HeadParts.Add(child);
+                    else
+                        switch (child.OriginalPart.category)
+                        {
+                            case "EYE":
+                                EyeParts.Add(child);
+                                break;
+                            case "MOUTH":
+                            case "BEAK":
+                                MouthParts.Add(child);
+                                break;
+                            case "EYELID":
+                                EyelidParts.Add(child);
+                                break;
+                            case "LIP":
+                                LipParts.Add(child);
+                                break;
+                            case "NOSE":
+                                NoseParts.Add(child);
+                                break;
+                            case "CHEEK":
+                                CheekParts.Add(child);
+                                break;
+                            case "TUSK":
+                            case "MANDIBLE":
+                                TuskParts.Add(child);
+                                break;
+                            case "EAR":
+                                if (child.IsLeft)
+                                    LeftEarParts.Add(child);
+                                else
+                                    RightEarParts.Add(child);
+                                break;
+                            case "SHELL":
+                            case "HUMP":
+                                BackParts.Add(child);
+                                break;
+                            case "FIN":
+                                if (child.IsLeft && !part.IsLeft)
+                                    LeftParts.Add(child);
+                                else if (child.IsRight && !part.IsRight)
+                                    RightParts.Add(child);
+                                else
+                                    BackParts.Add(child);
+                                break;
+                            case "TOOTH":
+                            case "TONGUE":
+                            case "THROAT":
+                                break;
+                            default:
+                                if (child.IsLowerBody)
+                                    LowerBodyParts.Add(child);
+                                else if (child.IsEmbedded)
+                                    EmbeddedParts.Add(child);
+                                else if (child.IsLeft && !part.IsLeft)
+                                    LeftParts.Add(child);
+                                else if (child.IsRight && !part.IsRight)
+                                    RightParts.Add(child);
+                                else
+                                    ExternalParts.Add(child);
+                                break;
+                        }
                 }
             }
 
             bool root = pos.Length < 0.0001;
+
+
+            for (int i = 0; i < LeftEarParts.Count; i++)
+            {
+                BodyPart child = LeftEarParts[i];
+                double rotateAngle = 0;
+                double childWidth = 0;
+                foreach (BodyPartMod mod in child.AppearanceMods)
+                {
+                    if (mod.Original.type == "SPLAYED_OUT")
+                    {
+                        childWidth = ((mod.CurrentValue - 100) / 100.0) * VolumeToDiameterConverter.Convert((child.OriginalPart.relsize * creatureScale) * visualScale);
+                    }
+                }
+                if (part.IsLowerBody)
+                    if (root)
+                        rotateAngle = Range(i, LeftEarParts.Count, 80, 100);
+                    else
+                        rotateAngle = Range(i, LeftEarParts.Count, -20, -90);
+                else
+                    rotateAngle = Range(i, LeftEarParts.Count, 80, 100);
+                AddPart(canvas, pos, child, pos + (direction * ((width / 2) + childWidth)).Rotate(rotateAngle), creatureScale, visualScale, sizeMod, true);
+            }
+            for (int i = 0; i < RightEarParts.Count; i++)
+            {
+                BodyPart child = RightEarParts[i];
+                double rotateAngle = 0;
+                double childWidth = 0;
+                foreach (BodyPartMod mod in child.AppearanceMods)
+                {
+                    if (mod.Original.type == "SPLAYED_OUT")
+                    {
+                        childWidth = ((mod.CurrentValue / 200.0) - 0.5) * VolumeToDiameterConverter.Convert((child.OriginalPart.relsize * creatureScale) * visualScale);
+                    }
+                }
+                if (part.IsLowerBody)
+                    if (root)
+                        rotateAngle = Range(i, RightEarParts.Count, -80, -100);
+                    else
+                        rotateAngle = Range(i, RightEarParts.Count, 20, 90);
+                else
+                    rotateAngle = Range(i, RightEarParts.Count, -80, -100);
+                AddPart(canvas, pos, child, pos + (direction * ((width / 2) + childWidth)).Rotate(rotateAngle), creatureScale, visualScale, sizeMod, true);
+            }
+            for (int i = 0; i < BackParts.Count; i++)
+            {
+                BodyPart child = BackParts[i];
+                double rotateAngle = 0;
+                if (part.IsLeft)
+                    rotateAngle = Range(i, BackParts.Count, -45, 45);
+                else
+                    rotateAngle = Range(i, BackParts.Count, 45, -45);
+                AddPart(canvas, pos, child, pos + (direction * length / 2).Rotate(rotateAngle), creatureScale, visualScale, sizeMod, true);
+            }
+
+            //Anything before this is below the part.
+            canvas.Children.Add(partShape);
+            //Anything after this is above the part.
 
             for (int i = 0; i < ExternalParts.Count; i++)
             {
@@ -603,6 +684,16 @@ namespace Dwarf_Portrait
                     rotateAngle = Range(i, ExternalParts.Count, -45, 45);
                 else
                     rotateAngle = Range(i, ExternalParts.Count, 45, -45);
+                AddPart(canvas, pos, child, pos + (direction * length / 2).Rotate(rotateAngle), creatureScale, visualScale, sizeMod);
+            }
+            for (int i = 0; i < HeadParts.Count; i++)
+            {
+                BodyPart child = HeadParts[i];
+                double rotateAngle = 0;
+                if (part.IsLeft)
+                    rotateAngle = Range(i, HeadParts.Count, -45, 45);
+                else
+                    rotateAngle = Range(i, HeadParts.Count, 45, -45);
                 AddPart(canvas, pos, child, pos + (direction * length / 2).Rotate(rotateAngle), creatureScale, visualScale, sizeMod);
             }
             for (int i = 0; i < LowerBodyParts.Count; i++)
@@ -635,32 +726,6 @@ namespace Dwarf_Portrait
                         rotateAngle = Range(i, RightParts.Count, 20, 40);
                 else
                     rotateAngle = Range(i, RightParts.Count, -45, -90);
-                AddPart(canvas, pos, child, pos + (direction * length / 2).Rotate(rotateAngle), creatureScale, visualScale, sizeMod);
-            }
-            for (int i = 0; i < LeftEarParts.Count; i++)
-            {
-                BodyPart child = LeftEarParts[i];
-                double rotateAngle = 0;
-                if (part.IsLowerBody)
-                    if (root)
-                        rotateAngle = Range(i, LeftEarParts.Count, 45, 135);
-                    else
-                        rotateAngle = Range(i, LeftEarParts.Count, -20, -90);
-                else
-                    rotateAngle = Range(i, LeftEarParts.Count, 45, 90);
-                AddPart(canvas, pos, child, pos + (direction * length / 2).Rotate(rotateAngle), creatureScale, visualScale, sizeMod);
-            }
-            for (int i = 0; i < RightEarParts.Count; i++)
-            {
-                BodyPart child = RightEarParts[i];
-                double rotateAngle = 0;
-                if (part.IsLowerBody)
-                    if (root)
-                        rotateAngle = Range(i, RightEarParts.Count, -45, -135);
-                    else
-                        rotateAngle = Range(i, RightEarParts.Count, 20, 90);
-                else
-                    rotateAngle = Range(i, RightEarParts.Count, -45, -90);
                 AddPart(canvas, pos, child, pos + (direction * length / 2).Rotate(rotateAngle), creatureScale, visualScale, sizeMod);
             }
             for (int i = 0; i < EmbeddedParts.Count; i++)

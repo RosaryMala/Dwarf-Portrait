@@ -105,6 +105,7 @@
     <Compile Include="ColorMod.cs" />
     <Compile Include="ColorPattern.cs" />
     <Compile Include="ColorPatternTemplateSelector.cs" />
+    <Compile Include="CP437Converter.cs" />
     <Compile Include="Creature.cs" />
     <Compile Include="CreatureTissue.cs" />
     <Compile Include="MatPairStruct.cs" />

@@ -103,6 +103,7 @@
         <local:ColorPatternTemplateSelector x:Key="colorPatternTemplateSelector"/>
         <local:BodyPartInternalSelector x:Key="bodyPartInternalSelector"/>
         <local:VolumeToDiameterConverter x:Key="cubeRootConverter"/>
+        <local:CP437Converter x:Key="cP437Converter"/>
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -207,8 +208,8 @@
                                 <ColumnDefinition Width="auto"/>
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" HorizontalAlignment="Left" Margin="10,10,0,10" TextWrapping="Wrap" Text="Diameter:" Width="auto"/>
-                            <TextBlock Margin="10" TextWrapping="NoWrap" Grid.Column="1" Text="{Binding Size, Converter={StaticResource cubeRootConverter}, StringFormat={}{0:#,#.0}cm}"/>
+                            <TextBlock Grid.Column="0" HorizontalAlignment="Left" Margin="10,10,0,10" TextWrapping="Wrap" Text="Tile:" Width="auto"/>
+                            <TextBlock Margin="10" TextWrapping="NoWrap" Grid.Column="1" Text="{Binding CreatureRaw.creature_tile, Converter={StaticResource cP437Converter}}" Background="Black" Foreground="{Binding ProfessionColor}" FontFamily="Lucida Console" FontSize="20"/>
                         </Grid>
                     </Grid>
                     <TextBlock Text="{Binding CasteRaw.description}" Grid.Row="2" Margin="10" TextWrapping="Wrap"/>

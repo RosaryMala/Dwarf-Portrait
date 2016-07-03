@@ -371,7 +371,7 @@ namespace Dwarf_Portrait
                     break;
                 case "FIN":
                 case "FLIPPER":
-                case "CLAW":
+                case "PINCER":
                     partShape = new Ellipse();
 
                     length = VolumeToDiameterConverter.Convert(part.OriginalPart.relsize * creatureScale) * visualScale * 2;

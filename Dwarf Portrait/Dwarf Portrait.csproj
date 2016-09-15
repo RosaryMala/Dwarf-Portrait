@@ -108,6 +108,7 @@
     <Compile Include="CP437Converter.cs" />
     <Compile Include="Creature.cs" />
     <Compile Include="CreatureTissue.cs" />
+    <Compile Include="GeneratedCreatureTypes.cs" />
     <Compile Include="MatPairStruct.cs" />
     <Compile Include="VectorExt.cs" />
     <Compile Include="VolumeToDiameterConverter.cs" />

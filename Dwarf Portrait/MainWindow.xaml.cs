@@ -195,7 +195,8 @@ namespace Dwarf_Portrait
                 return true;
             else
                 return ((item as Creature).Name.IndexOf(unitFilterTextbox.Text, StringComparison.OrdinalIgnoreCase) >= 0)
-                    || ((item as Creature).Race.IndexOf(unitFilterTextbox.Text, StringComparison.OrdinalIgnoreCase) >= 0);
+                    || ((item as Creature).Race.IndexOf(unitFilterTextbox.Text, StringComparison.OrdinalIgnoreCase) >= 0)
+                    || ((item as Creature).CasteRaw.description.IndexOf(unitFilterTextbox.Text, StringComparison.OrdinalIgnoreCase) >= 0);
         }
 
         private void unitFilterTextbox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)

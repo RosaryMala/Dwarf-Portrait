@@ -363,8 +363,8 @@ namespace Dwarf_Portrait
                 case "TAIL":
                     partShape = new Rectangle();
 
-                    width = GetRatioCylinderWidth(part.OriginalPart.relsize * creatureScale, 3) * visualScale;
-                    length = width * 3;
+                    width = GetRatioCylinderWidth(part.OriginalPart.relsize * creatureScale, 6) * visualScale;
+                    length = width * 6;
                     break;
                 case "HORN":
                 case "TUSK":
@@ -630,6 +630,7 @@ namespace Dwarf_Portrait
             List<BodyPart> RightEarParts = new List<BodyPart>();
             List<BodyPart> HeadParts = new List<BodyPart>();
             List<BodyPart> BackParts = new List<BodyPart>();
+            List<BodyPart> TailParts = new List<BodyPart>();
 
             foreach (var child in part.Children)
             {
@@ -680,6 +681,9 @@ namespace Dwarf_Portrait
                                     RightParts.Add(child);
                                 else
                                     BackParts.Add(child);
+                                break;
+                            case "TAIL":
+                                TailParts.Add(child);
                                 break;
                             case "TOOTH":
                             case "TONGUE":
@@ -752,6 +756,12 @@ namespace Dwarf_Portrait
                 else
                     rotateAngle = Range(i, BackParts.Count, 45, -45);
                 AddPart(grid, pos, child, pos + (direction * length).Rotate(rotateAngle), creatureScale, visualScale, sizeMod, true);
+            }
+            for (int i = 0; i < TailParts.Count; i++)
+            {
+                BodyPart child = TailParts[i];
+                double rotateAngle = Range(i, TailParts.Count, 60, 90);
+                AddPart(grid, pos, child, pos + (direction * length).Rotate(rotateAngle), creatureScale, visualScale, sizeMod);
             }
 
             //Anything before this is below the part.

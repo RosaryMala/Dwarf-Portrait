@@ -417,13 +417,14 @@
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
-                        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Grid.RowSpan="2">
+                        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
                             <Grid x:Name="portraitCanvas">
                             </Grid>
                         </ScrollViewer>
-                        <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft" Grid.Row="1">
-                            <Slider x:Name="portraitZoomSlider" HorizontalAlignment="Right" Margin="10" VerticalAlignment="Bottom" TickPlacement="BottomRight" Width="200" ToolTip="Zoom" ValueChanged="portraitZoomSlider_ValueChanged" Minimum="-2" IsSnapToTickEnabled="True" Maximum="7" Grid.RowSpan="2"/>
-                            <TextBlock x:Name="portraitZoomTextBlock" Margin="10" TextWrapping="Wrap" Text="0" Height="24" VerticalAlignment="Bottom" HorizontalAlignment="Right" Grid.RowSpan="2"/>
+                        <StackPanel Orientation="Horizontal" Grid.Row="1">
+                            <Slider x:Name="portraitZoomSlider" Margin="10" TickPlacement="BottomRight" Width="200" ToolTip="Zoom" ValueChanged="portraitZoomSlider_ValueChanged" Minimum="-5" IsSnapToTickEnabled="True" Maximum="7"/>
+                            <TextBlock x:Name="portraitZoomTextBlock" Margin="10" TextWrapping="Wrap" Text="0" Height="24" Width="20"/>
+                            <Button Content="📷" Margin="10"/>
                         </StackPanel>
                     </Grid>
                 </Border>

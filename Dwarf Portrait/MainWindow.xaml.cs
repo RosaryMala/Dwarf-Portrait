@@ -304,9 +304,11 @@ namespace Dwarf_Portrait
                 else
                     nameTag.Text = creature.Name;
 
+                nameTag.ToolTip = creature.CasteRaw.description;
+
                 grid.Children.Add(nameTag);
 
-                AddPart(grid, new Vector(shift - todalWidth, 0) * zoomLevel, creature.BodypartTree[0], new Vector(shift - todalWidth, 0) * zoomLevel, scale, zoomLevel, sizeMod);
+                AddPart(grid, new Vector(shift - todalWidth, 0) * zoomLevel, creature.BodypartTree[0], new Vector(shift - todalWidth, 0) * zoomLevel, scale, zoomLevel, sizeMod, false, true);
 
                 shift += (Math.Pow(creature.Size, 1.0 / 3.0) * shiftScale / 2.0);
 
@@ -321,7 +323,7 @@ namespace Dwarf_Portrait
             return (cubeRootSquare2 * Math.Pow(volume, 1.0 / 3.0)) / (cubeRootPi * Math.Pow(ratio, 1.0 / 3.0));
         }
 
-        private static void AddPart(Grid grid, Vector parentPos, BodyPart part, Vector pos, double creatureScale, double visualScale, Vector sizeMod, bool centered = false)
+        private static void AddPart(Grid grid, Vector parentPos, BodyPart part, Vector pos, double creatureScale, double visualScale, Vector sizeMod, bool centered = false, bool root = false)
         {
             Shape partShape;
 
@@ -698,9 +700,6 @@ namespace Dwarf_Portrait
                         }
                 }
             }
-
-            bool root = pos.Length < 0.0001;
-
 
             for (int i = 0; i < LeftEarParts.Count; i++)
             {

@@ -442,12 +442,31 @@ namespace Dwarf_Portrait
             BodyPartLayer usedLayer = null;
             foreach (var layer in part.Layers)
             {
-                if (usedLayer == null)
-                    usedLayer = layer;
-                else
-                    if(usedLayer.Original.layer_depth >= layer.Original.layer_depth)
-                        if (usedLayer.Original.tissue_id > layer.Original.layer_depth)
+                // These layer types should never be used to decide the head color.
+                switch (layer.Original.layer_name)
+                {
+                    case "SIDEBURNS":
+                    case "CHIN_WHISKERS":
+                    case "MOUSTACHE":
+                    case "EYEBROW":
+                        continue;
+                }
+                if (usedLayer == null || layer.Original.layer_depth <= usedLayer.Original.layer_depth) // Lower depth = shallower layer. -1 = surface.
+                {
+                    if (usedLayer == null || layer.Original.tissue_id > usedLayer.Original.tissue_id)
+                    {
+                        int duplicates = 0;
+                        foreach (var testLayer in part.Layers)
+                        {
+                            if (layer.Original.layer_depth == testLayer.Original.layer_depth && layer.Original.tissue_id == testLayer.Original.tissue_id)
+                            {
+                                duplicates++;
+                            }
+                        }
+                        if (duplicates <= 1)
                             usedLayer = layer;
+                    }
+                }
             }
             Color fillColor = Color.FromRgb(255, 255, 255);
             if (usedLayer != null && usedLayer.ColorMod != null)

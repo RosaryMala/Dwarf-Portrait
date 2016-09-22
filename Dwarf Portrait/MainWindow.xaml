@@ -114,7 +114,7 @@
         <Button x:Name="fetchButton" Content="Fetch Info" Margin="10,0,10,10" Height="20" VerticalAlignment="Bottom" Click="fetchButton_Click" Grid.Column="2"/>
         <TabControl Margin="10,38,10,35" Grid.Column="2" >
             <TabItem Header="Units">
-                <ListBox x:Name="unitListView" Margin="10" SelectionChanged="creatureList_SelectionChanged" Background="Black" HorizontalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                <ListBox x:Name="unitListView" Margin="10" SelectionChanged="creatureList_SelectionChanged" Background="Black" HorizontalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled" SelectionMode="Extended">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <Grid>
@@ -126,7 +126,7 @@
                 </ListBox>
             </TabItem>
             <TabItem Header="Races">
-                <ListView x:Name="raceListView" Margin="10" SelectionChanged="creatureList_SelectionChanged" Background="Black" HorizontalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                <ListView x:Name="raceListView" Margin="10" SelectionChanged="creatureList_SelectionChanged" Background="Black" HorizontalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled" SelectionMode="Extended">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <Grid>
@@ -413,17 +413,12 @@
             <TabItem Header="Portrait">
                 <Border BorderBrush="#FFABADB3" Margin="10" BorderThickness="1">
                     <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                        </Grid.RowDefinitions>
-                        <Canvas x:Name="portraitCanvas" DataContextChanged="portraitCanvas_DataContextChanged" Grid.Column="1" Grid.Row="1"/>
-                        <Slider x:Name="portraitZoomSlider" HorizontalAlignment="Right" Margin="10" Grid.Row="1"  Grid.Column="1" VerticalAlignment="Bottom" TickPlacement="BottomRight" Width="200" ToolTip="Zoom" ValueChanged="portraitZoomSlider_ValueChanged" Minimum="-2" IsSnapToTickEnabled="True" Maximum="7"/>
-                        <TextBlock x:Name="portraitZoomTextBlock" Grid.Column="1" Margin="0,0,215,10" Grid.Row="1" TextWrapping="Wrap" Text="0" Height="24" VerticalAlignment="Bottom" HorizontalAlignment="Right"/>
+                        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                            <Grid x:Name="portraitCanvas" DataContextChanged="portraitCanvas_DataContextChanged">
+                            </Grid>
+                        </ScrollViewer>
+                        <Slider x:Name="portraitZoomSlider" HorizontalAlignment="Right" Margin="10" VerticalAlignment="Bottom" TickPlacement="BottomRight" Width="200" ToolTip="Zoom" ValueChanged="portraitZoomSlider_ValueChanged" Minimum="-2" IsSnapToTickEnabled="True" Maximum="7"/>
+                        <TextBlock x:Name="portraitZoomTextBlock" Margin="0,0,215,10" TextWrapping="Wrap" Text="0" Height="24" VerticalAlignment="Bottom" HorizontalAlignment="Right"/>
                     </Grid>
                 </Border>
             </TabItem>

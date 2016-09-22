@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -140,12 +141,18 @@ namespace Dwarf_Portrait
             }
         }
 
-        private void creatureList_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        private void creatureList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if(e.AddedItems.Count > 0)
+            if (e.AddedItems.Count > 0)
             {
                 Creature selectedUnit = e.AddedItems[0] as Creature;
                 UpdateView(selectedUnit);
+            }
+            ListBox creatureListBox = sender as ListBox;
+            if (creatureListBox != null)
+            {
+                creatureList = creatureListBox.SelectedItems;
+                updateCreatureGrid(portraitCanvas);
             }
         }
 
@@ -207,50 +214,102 @@ namespace Dwarf_Portrait
                 CollectionViewSource.GetDefaultView(raceListView.ItemsSource).Refresh();
         }
 
-        private void portraitCanvas_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        IList creatureList;
+
+        private void updateCreatureGrid(Grid grid)
         {
-            Grid canvas = sender as Grid;
+            const float shiftScale = 7;
+            const float textDistance = 12;
 
-            Creature creature = e.NewValue as Creature;
-
-            updateCreatureGrid(canvas, creature);
-        }
-
-        private void updateCreatureGrid(Grid grid, Creature creature)
-        {
             grid.Children.Clear();
-            if (creature == null)
+
+            if (creatureList == null || creatureList.Count == 0)
                 return;
 
+            double todalWidth = 0;
             double shift = 0;
-            double scale = ((double)creature.Size / creature.CasteRaw.total_relsize);
 
-            Vector sizeMod = new Vector(1, 1);
+            double maxHeight = 0;
 
-            foreach (BodyPartMod mod in creature.AppearanceMods)
-            {
-                switch (mod.Original.type)
+            if (creatureList.Count > 1)
+                for (int i = 0; i < creatureList.Count; i++)
                 {
-                    case "HEIGHT":
-                    case "LENGTH":
-                        sizeMod.Y *= (mod.CurrentValue / 100.0);
-                        break;
-                    case "BROADNESS":
-                        sizeMod.X *= (mod.CurrentValue / 100.0);
-                        break;
-                    default:
-                        break;
+                    Creature creature = creatureList[i] as Creature;
+                    if (creature == null)
+                        continue;
+                    double width = Math.Pow(creature.Size, 1.0 / 3.0);
+                    if (i == 0 || i == creatureList.Count - 1)
+                    {
+                        width /= 2.0;
+                        todalWidth += width;
+                        maxHeight = Math.Max(maxHeight, width);
+                    }
+                    else
+                    {
+                        todalWidth += width;
+                        width /= 2.0;
+                        maxHeight = Math.Max(maxHeight, width);
+                    }
                 }
-            }
-
-            foreach (BodyPart part in creature.BodypartTree)
+            else
             {
-                if (part.IsInternal)
+                Creature creature = creatureList[0] as Creature;
+                if(creature != null)
+                    maxHeight = Math.Pow(creature.Size, 1.0 / 3.0) / 2.0;
+            }
+            todalWidth = todalWidth * shiftScale / 2;
+
+            for (int i = 0; i < creatureList.Count; i++)
+            {
+                Creature creature = creatureList[i] as Creature;
+
+                if (creature == null)
                     continue;
 
-                AddPart(grid, new Vector(0, 0), part, new Vector(shift, 0), scale, zoomLevel, sizeMod);
+                if (i > 0)
+                    shift += (Math.Pow(creature.Size, 1.0 / 3.0) * shiftScale / 2.0);
 
-                shift += 5;
+                double scale = ((double)creature.Size / creature.CasteRaw.total_relsize);
+
+                Vector sizeMod = new Vector(1, 1);
+
+                foreach (BodyPartMod mod in creature.AppearanceMods)
+                {
+                    switch (mod.Original.type)
+                    {
+                        case "HEIGHT":
+                        case "LENGTH":
+                            sizeMod.Y *= (mod.CurrentValue / 100.0);
+                            break;
+                        case "BROADNESS":
+                            sizeMod.X *= (mod.CurrentValue / 100.0);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+
+                TextBlock nameTag = new TextBlock();
+
+                nameTag.Margin = new Thickness((shift - todalWidth) * zoomLevel, maxHeight * textDistance * zoomLevel, 0, 0);
+                nameTag.HorizontalAlignment = HorizontalAlignment.Center;
+                nameTag.VerticalAlignment = VerticalAlignment.Center;
+                if(creatureList.Count > 1)
+                    nameTag.Width = Math.Pow(creature.Size, 1.0 / 3.0) * shiftScale * zoomLevel / 2.0;
+                nameTag.TextAlignment = TextAlignment.Center;
+                nameTag.TextWrapping = TextWrapping.Wrap;
+
+                if (creature.Name == "(No Name)")
+                    nameTag.Text = creature.Race;
+                else
+                    nameTag.Text = creature.Name;
+
+                grid.Children.Add(nameTag);
+
+                AddPart(grid, new Vector(shift - todalWidth, 0) * zoomLevel, creature.BodypartTree[0], new Vector(shift - todalWidth, 0) * zoomLevel, scale, zoomLevel, sizeMod);
+
+                shift += (Math.Pow(creature.Size, 1.0 / 3.0) * shiftScale / 2.0);
+
             }
         }
 
@@ -845,7 +904,7 @@ namespace Dwarf_Portrait
         {
             zoomLevel = Math.Pow(2, e.NewValue);
             portraitZoomTextBlock.Text = e.NewValue.ToString();
-            updateCreatureGrid(portraitCanvas, portraitCanvas.DataContext as Creature);
+            updateCreatureGrid(portraitCanvas);
         }
     }
 }

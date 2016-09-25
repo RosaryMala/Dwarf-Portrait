@@ -186,6 +186,7 @@
                             <ColumnDefinition/>
                             <ColumnDefinition/>
                             <ColumnDefinition/>
+                            <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -210,6 +211,14 @@
                             </Grid.ColumnDefinitions>
                             <TextBlock Grid.Column="0" HorizontalAlignment="Left" Margin="10,10,0,10" TextWrapping="Wrap" Text="Tile:" Width="auto"/>
                             <TextBlock Margin="10" TextWrapping="NoWrap" Grid.Column="1" Text="{Binding CreatureRaw.creature_tile, Converter={StaticResource cP437Converter}}" Background="Black" Foreground="{Binding ProfessionColor}" FontFamily="Lucida Console" FontSize="20"/>
+                        </Grid>
+                        <Grid Grid.Column="3">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" HorizontalAlignment="Left" Margin="10,10,0,10" TextWrapping="Wrap" Text="Size:" Width="auto"/>
+                            <TextBlock Margin="10" TextWrapping="NoWrap" Grid.Column="1" Text="{Binding Size}"/>
                         </Grid>
                     </Grid>
                     <TextBlock Text="{Binding CasteRaw.description}" Grid.Row="2" Margin="10" TextWrapping="Wrap"/>

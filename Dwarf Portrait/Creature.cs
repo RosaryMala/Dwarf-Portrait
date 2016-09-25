@@ -63,7 +63,8 @@ namespace Dwarf_Portrait
                         {
                             BodyPartLayer layer = new BodyPartLayer();
                             layer.Original = originalLayer;
-                            layer.Tissue = TissueList[originalLayer.tissue_id];
+                            if(originalLayer.tissue_id >= 0 && originalLayer.tissue_id < TissueList.Count)
+                                layer.Tissue = TissueList[originalLayer.tissue_id];
                             part.Layers.Add(layer);
                         }
 

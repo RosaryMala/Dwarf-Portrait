@@ -8,7 +8,7 @@ namespace Dwarf_Portrait
         public CreatureTissue(TissueRaw original)
         {
             Original = original;
-            if (DFConnection.MaterialRaws != null)
+            if (DFConnection.MaterialRaws != null && DFConnection.MaterialRaws.ContainsKey(original.material))
                 Material = DFConnection.MaterialRaws[original.material];
         }
         public TissueRaw Original { get; set; }

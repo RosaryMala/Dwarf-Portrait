@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
@@ -269,7 +270,25 @@ namespace Dwarf_Portrait
                 if (i > 0)
                     shift += (Math.Pow(creature.Size, 1.0 / 3.0) * shiftScale / 2.0);
 
-                double scale = ((double)creature.Size / creature.CasteRaw.total_relsize);
+                int totalRelsize = creature.CasteRaw.total_relsize;
+
+                int calculatedRelsize = 0;
+
+                foreach (var part in creature.CasteRaw.body_parts)
+                {
+                    if (!(part.flags[(int)body_part_raw_flags.INTERNAL] || part.flags[(int)body_part_raw_flags.EMBEDDED]))
+                        calculatedRelsize += part.relsize;
+                }
+
+                if (calculatedRelsize == 0)
+                    calculatedRelsize = 1; //This is probably from having no body.
+
+                if (totalRelsize == 0)
+                    totalRelsize = calculatedRelsize;
+
+                Debug.Assert(totalRelsize == calculatedRelsize, string.Format("totalRelsize {0} and calculatedRelsize {1} are not the same!", totalRelsize, calculatedRelsize));
+
+                double scale = ((double)creature.Size / totalRelsize);
 
                 Vector sizeMod = new Vector(1, 1);
 
@@ -308,7 +327,8 @@ namespace Dwarf_Portrait
 
                 grid.Children.Add(nameTag);
 
-                AddPart(grid, new Vector(shift - todalWidth, 0) * zoomLevel, creature.BodypartTree[0], new Vector(shift - todalWidth, 0) * zoomLevel, scale, zoomLevel, sizeMod, false, true);
+                if(creature.BodypartTree.Count > 0)
+                    AddPart(grid, new Vector(shift - todalWidth, 0) * zoomLevel, creature.BodypartTree[0], new Vector(shift - todalWidth, 0) * zoomLevel, scale, zoomLevel, sizeMod, false, true);
 
                 shift += (Math.Pow(creature.Size, 1.0 / 3.0) * shiftScale / 2.0);
 
@@ -546,7 +566,7 @@ namespace Dwarf_Portrait
 
             partShape.ToolTip = part.OriginalPart.token + " - " + part.OriginalPart.category + " - " + part.OriginalPart.relsize;
 
-            if (usedLayer.ColorMod != null)
+            if (usedLayer != null && usedLayer.ColorMod != null)
             {
                 switch (usedLayer.ColorMod.CurrentPatterns[0].Pattern)
                 {

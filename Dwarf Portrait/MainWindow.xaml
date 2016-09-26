@@ -433,7 +433,7 @@
                         <StackPanel Orientation="Horizontal" Grid.Row="1">
                             <Slider x:Name="portraitZoomSlider" Margin="10" TickPlacement="BottomRight" Width="200" ToolTip="Zoom" ValueChanged="portraitZoomSlider_ValueChanged" Minimum="-5" IsSnapToTickEnabled="True" Maximum="7"/>
                             <TextBlock x:Name="portraitZoomTextBlock" Margin="10" TextWrapping="Wrap" Text="0" Height="24" Width="20"/>
-                            <Button Content="📷" Margin="10"/>
+                            <Button x:Name="SnapshotButton" Content="📷" Margin="10" Click="SnapshotButton_Click" Width="24"/>
                         </StackPanel>
                     </Grid>
                 </Border>

@@ -5,6 +5,8 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
+using System.IO;
+using System.Media;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -907,7 +909,7 @@ namespace Dwarf_Portrait
                 Vector childPos = direction;
                 childPos = childPos.Rotate(90);
                 childPos *= Range(i, TuskParts.Count, -length * 0.4, length * 0.4);
-                AddPart(grid, pos, child, pos + childPos + direction * length * 0.5 * -0.75, creatureScale, visualScale, sizeMod, true);
+                AddPart(grid, pos, child, pos + childPos + direction * length * -0.675, creatureScale, visualScale, sizeMod, false);
             }
             for (int i = 0; i < NoseParts.Count; i++)
             {
@@ -934,6 +936,29 @@ namespace Dwarf_Portrait
             zoomLevel = Math.Pow(2, e.NewValue);
             portraitZoomTextBlock.Text = e.NewValue.ToString();
             updateCreatureGrid(portraitCanvas);
+        }
+
+        private void SnapshotButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (creatureList.Count == 0)
+                return;
+
+            Creature creature = creatureList[0] as Creature;
+            if (creature == null)
+                return;
+            string name = "";
+
+            name = creature.Name;
+            if (name == "(No Name)")
+                name = creature.Race;
+
+            string fileName = string.Format("{0}.png", name);
+            for (int i = 0; File.Exists(fileName); i++)
+            {
+                fileName = string.Format("{0}_{1}.png", name, i);
+            }
+
+            BitmapSaver.SaveElementToPng(portraitCanvas, fileName);
         }
     }
 }

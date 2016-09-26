@@ -154,6 +154,17 @@ namespace Dwarf_Portrait
                 return name;
             }
         }
+
+        public string NameOrRace
+        {
+            get
+            {
+                if (name == "")
+                    return race;
+                return name;
+            }
+        }
+
         public string Race { get { return race; } }
         public string ProfessionColor { get { return professionColor; } }
 

@@ -108,6 +108,9 @@
     <Compile Include="ColorPatternTemplateSelector.cs" />
     <Compile Include="CP437Converter.cs" />
     <Compile Include="Creature.cs" />
+    <Compile Include="CreatureBodyDiagram.xaml.cs">
+      <DependentUpon>CreatureBodyDiagram.xaml</DependentUpon>
+    </Compile>
     <Compile Include="CreatureTissue.cs" />
     <Compile Include="GeneratedCreatureTypes.cs" />
     <Compile Include="MatPairStruct.cs" />
@@ -123,6 +126,10 @@
     <Compile Include="RemoteClientDF\Tools.cs" />
     <Compile Include="UnitFlags\FlagDisplay.cs" />
     <Compile Include="UnitFlags\UnitFlags.cs" />
+    <Page Include="CreatureBodyDiagram.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

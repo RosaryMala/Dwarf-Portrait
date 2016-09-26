@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Dwarf_Portrait"
         xmlns:flags="clr-namespace:UnitFlags"
+        xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
         mc:Ignorable="d"
         Title="MainWindow" Height="600" Width="800">
     <Window.Resources>
@@ -427,8 +428,25 @@
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-                            <Grid x:Name="portraitCanvas">
-                            </Grid>
+                            <ItemsControl x:Name="CreatureDiagramList">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal"></StackPanel>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition/>
+                                                <RowDefinition/>
+                                            </Grid.RowDefinitions>
+                                            <local:CreatureBodyDiagram Zoom="1" HorizontalAlignment="Center"/>
+                                            <TextBlock Grid.Row="1" Text="{Binding NameOrRace}" HorizontalAlignment="Center"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
                         </ScrollViewer>
                         <StackPanel Orientation="Horizontal" Grid.Row="1">
                             <Slider x:Name="portraitZoomSlider" Margin="10" TickPlacement="BottomRight" Width="200" ToolTip="Zoom" ValueChanged="portraitZoomSlider_ValueChanged" Minimum="-5" IsSnapToTickEnabled="True" Maximum="7"/>

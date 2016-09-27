@@ -6,7 +6,5 @@
              xmlns:local="clr-namespace:Dwarf_Portrait"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    <Canvas x:Name="DiagramCanvas" DataContextChanged="DiagramCanvas_DataContextChanged">
-            
-    </Canvas>
+    <Canvas x:Name="DiagramCanvas" DataContextChanged="DiagramCanvas_DataContextChanged"/>
 </UserControl>

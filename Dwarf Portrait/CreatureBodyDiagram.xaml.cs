@@ -101,6 +101,8 @@ namespace Dwarf_Portrait
 
         private static void AddPart(Canvas canvas, Vector parentPos, BodyPart part, Vector pos, double creatureScale, double visualScale, Vector sizeMod, bool centered = false, bool root = false)
         {
+            #region Shapes
+
             Shape partShape;
 
             double length;
@@ -217,6 +219,8 @@ namespace Dwarf_Portrait
 
             width *= sizeMod.X;
             length *= sizeMod.Y;
+
+            #endregion
 
             partShape.Width = width;
             partShape.Height = length;

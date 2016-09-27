@@ -105,6 +105,7 @@
         <local:BodyPartInternalSelector x:Key="bodyPartInternalSelector"/>
         <local:VolumeToDiameterConverter x:Key="cubeRootConverter"/>
         <local:CP437Converter x:Key="cP437Converter"/>
+        <local:LogNumberConverter x:Key="logNumberConverter"/>
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -428,7 +429,8 @@
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-                            <ItemsControl x:Name="CreatureDiagramList">
+                            <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <ItemsControl x:Name="CreatureDiagramList" HorizontalAlignment="Left" VerticalAlignment="Top">
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <StackPanel Orientation="Horizontal"></StackPanel>
@@ -436,21 +438,22 @@
                                 </ItemsControl.ItemsPanel>
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
-                                        <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                                        <Grid HorizontalAlignment="Center" VerticalAlignment="Bottom">
                                             <Grid.RowDefinitions>
                                                 <RowDefinition/>
                                                 <RowDefinition/>
                                             </Grid.RowDefinitions>
-                                            <local:CreatureBodyDiagram Zoom="1" HorizontalAlignment="Center"/>
-                                            <TextBlock Grid.Row="1" Text="{Binding NameOrRace}" HorizontalAlignment="Center"/>
+                                            <local:CreatureBodyDiagram Zoom="{Binding ElementName=portraitZoomSlider, Path=Value, Converter={StaticResource logNumberConverter}}" HorizontalAlignment="Center"/>
+                                            <TextBlock Grid.Row="1" Text="{Binding NameOrRace}" HorizontalAlignment="Center" Margin="5"/>
                                         </Grid>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
+                            </Grid>
                         </ScrollViewer>
                         <StackPanel Orientation="Horizontal" Grid.Row="1">
-                            <Slider x:Name="portraitZoomSlider" Margin="10" TickPlacement="BottomRight" Width="200" ToolTip="Zoom" ValueChanged="portraitZoomSlider_ValueChanged" Minimum="-5" IsSnapToTickEnabled="True" Maximum="7"/>
-                            <TextBlock x:Name="portraitZoomTextBlock" Margin="10" TextWrapping="Wrap" Text="0" Height="24" Width="20"/>
+                            <Slider x:Name="portraitZoomSlider" Margin="10" TickPlacement="BottomRight" Width="200" ToolTip="Zoom" Minimum="-5" IsSnapToTickEnabled="True" Maximum="7"/>
+                            <TextBlock x:Name="portraitZoomTextBlock" Margin="10" TextWrapping="Wrap" Text="{Binding ElementName=portraitZoomSlider, Path=Value}" Height="24" Width="20"/>
                             <Button x:Name="SnapshotButton" Content="📷" Margin="10" Click="SnapshotButton_Click" Width="24"/>
                         </StackPanel>
                     </Grid>

@@ -113,6 +113,7 @@
     </Compile>
     <Compile Include="CreatureTissue.cs" />
     <Compile Include="GeneratedCreatureTypes.cs" />
+    <Compile Include="LogNumberConverter.cs" />
     <Compile Include="MatPairStruct.cs" />
     <Compile Include="VectorExt.cs" />
     <Compile Include="VolumeToDiameterConverter.cs" />

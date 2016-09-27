@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Media;
 using System.Windows;
 using System.Windows.Media;
@@ -10,10 +11,19 @@ namespace Dwarf_Portrait
     {
         public static void SaveElementToPng(FrameworkElement element, string path)
         {
-            using (FileStream stream = new FileStream(path, FileMode.OpenOrCreate))
+            try
             {
-                BitmapSaver.SaveAsPng(BitmapSaver.GetImage(element), stream);
-                SystemSounds.Beep.Play();
+                using (FileStream stream = new FileStream(path, FileMode.OpenOrCreate))
+                {
+                    SaveAsPng(GetImage(element), stream);
+                    SystemSounds.Beep.Play();
+                }
+            }
+            catch (Exception e)
+            {
+                SystemSounds.Exclamation.Play();
+                File.Delete(path);
+                MessageBox.Show(e.Message);
             }
         }
 

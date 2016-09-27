@@ -21,13 +21,14 @@ namespace Dwarf_Portrait
 
         private void DiagramCanvas_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            Canvas canvas = sender as Canvas;
-            if (canvas == null)
-                return;
+            RegenerateCreature();
+        }
 
-            canvas.Children.Clear();
+        private void RegenerateCreature()
+        {
+            DiagramCanvas.Children.Clear();
 
-            Creature creature = e.NewValue as Creature;
+            Creature creature = DataContext as Creature;
             if (creature == null)
                 return;
 
@@ -71,12 +72,10 @@ namespace Dwarf_Portrait
             }
 
             if (creature.BodypartTree.Count > 0)
-                AddPart(canvas, new Vector(), creature.BodypartTree[0], new Vector(), scale, 1, sizeMod, false, true);
+                AddPart(DiagramCanvas, new Vector(), creature.BodypartTree[0], new Vector(), scale, Zoom, sizeMod, false, true);
 
-            FitCanvas(canvas);
+            FitCanvas(DiagramCanvas);
         }
-
-
 
 
 
@@ -88,10 +87,16 @@ namespace Dwarf_Portrait
 
         // Using a DependencyProperty as the backing store for Zoom.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ZoomProperty =
-            DependencyProperty.Register("Zoom", typeof(double), typeof(CreatureBodyDiagram), new PropertyMetadata(1.0));
+            DependencyProperty.Register(
+                "Zoom",
+                typeof(double),
+                typeof(CreatureBodyDiagram),
+                new PropertyMetadata(1.0, new PropertyChangedCallback(OnZoomChanged)));
 
-
-
+        private static void OnZoomChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            ((CreatureBodyDiagram)d).RegenerateCreature();
+        }
 
         private static void AddPart(Canvas canvas, Vector parentPos, BodyPart part, Vector pos, double creatureScale, double visualScale, Vector sizeMod, bool centered = false, bool root = false)
         {

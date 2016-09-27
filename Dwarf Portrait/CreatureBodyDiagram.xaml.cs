@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using RemoteFortressReader;
 using UnitFlags;
 
 namespace Dwarf_Portrait
@@ -130,54 +131,30 @@ namespace Dwarf_Portrait
                 case "LEG_REAR":
                 case "ARM_UPPER":
                 case "ARM_LOWER":
-                    partShape = new Rectangle();
-
-                    width = GetRatioCylinderWidth(part.OriginalPart.relsize * creatureScale, 2.5) * visualScale;
-                    length = width * 2.5;
+                    partShape = MakeCylinder(part.OriginalPart, 2.5, creatureScale, visualScale, out width, out length);
                     break;
                 case "TAIL":
-                    partShape = new Rectangle();
-
-                    width = GetRatioCylinderWidth(part.OriginalPart.relsize * creatureScale, 5) * visualScale;
-                    length = width * 5;
+                    partShape = MakeCylinder(part.OriginalPart, 5, creatureScale, visualScale, out width, out length);
                     break;
                 case "HORN":
                 case "TUSK":
-                    partShape = new Rectangle();
-
-                    width = GetRatioCylinderWidth(part.OriginalPart.relsize * creatureScale, 3) * visualScale;
-                    length = width * 3;
+                    partShape = MakeCylinder(part.OriginalPart, 3, creatureScale, visualScale, out width, out length);
                     break;
                 case "BODY_UPPER":
                 case "BODY_LOWER":
                 case "MANDIBLE":
-                    partShape = new Rectangle();
-
-                    width = GetRatioCylinderWidth(part.OriginalPart.relsize * creatureScale, 1) * visualScale;
-                    length = width * 1;
-
-                    partShape.Width = width;
-                    partShape.Height = length;
+                    partShape = MakeCylinder(part.OriginalPart, 1, creatureScale, visualScale, out width, out length);
                     break;
                 case "FINGER":
-                    partShape = new Rectangle();
-
-                    width = GetRatioCylinderWidth(part.OriginalPart.relsize * creatureScale, 3) * visualScale;
-                    length = width * 3;
+                    partShape = MakeCylinder(part.OriginalPart, 3, creatureScale, visualScale, out width, out length);
                     break;
                 case "RIB_TRUE":
                 case "RIB_FALSE":
                 case "RIB_FLOATING":
-                    partShape = new Rectangle();
-
-                    width = GetRatioCylinderWidth(part.OriginalPart.relsize * creatureScale, 0.2) * visualScale;
-                    length = width * 0.2;
+                    partShape = MakeCylinder(part.OriginalPart, 10, creatureScale / 24, visualScale, out width, out length);
                     break;
                 case "LIP":
-                    partShape = new Rectangle();
-
-                    width = GetRatioCylinderWidth(part.OriginalPart.relsize * creatureScale, 0.2) * visualScale;
-                    length = width * 0.2;
+                    partShape = MakeCylinder(part.OriginalPart, 0.2, creatureScale, visualScale, out width, out length);
                     foreach (BodyPartMod mod in part.AppearanceMods)
                     {
                         switch (mod.Original.type)
@@ -195,10 +172,7 @@ namespace Dwarf_Portrait
                 case "ARM":
                 case "LEG":
                 case "STINGER":
-                    partShape = new Rectangle();
-
-                    width = GetRatioCylinderWidth(part.OriginalPart.relsize * creatureScale, 5) * visualScale;
-                    length = width * 5;
+                    partShape = MakeCylinder(part.OriginalPart, 5, creatureScale, visualScale, out width, out length);
                     break;
                 case "WING":
                     partShape = new Ellipse();
@@ -270,6 +244,8 @@ namespace Dwarf_Portrait
             Canvas.SetLeft(partShape, (-partShape.Width / 2) + pos.X);
             Canvas.SetTop(partShape, (-partShape.Height / 2) + pos.Y);
 
+            #region Colors
+
             BodyPartLayer usedLayer = null;
             foreach (var layer in part.Layers)
             {
@@ -320,9 +296,9 @@ namespace Dwarf_Portrait
             {
                 switch (usedLayer.ColorMod.CurrentPatterns[0].Pattern)
                 {
-                    case RemoteFortressReader.PatternType.MONOTONE:
+                    case PatternType.MONOTONE:
                         break;
-                    case RemoteFortressReader.PatternType.STRIPES:
+                    case PatternType.STRIPES:
                         {
                             var stripeBrush = new LinearGradientBrush();
                             for (int i = 0; i <= 10; i++)
@@ -334,7 +310,7 @@ namespace Dwarf_Portrait
                             partShape.Fill = stripeBrush;
                         }
                         break;
-                    case RemoteFortressReader.PatternType.IRIS_EYE:
+                    case PatternType.IRIS_EYE:
                         {
                             var color = usedLayer.ColorMod.CurrentPatterns[0].Original.colors[2];
                             var irisColor = Color.FromRgb((byte)color.red, (byte)color.green, (byte)color.blue);
@@ -354,9 +330,9 @@ namespace Dwarf_Portrait
                             partShape.Fill = eyeBrush;
                         }
                         break;
-                    case RemoteFortressReader.PatternType.SPOTS:
+                    case PatternType.SPOTS:
                         break;
-                    case RemoteFortressReader.PatternType.PUPIL_EYE:
+                    case PatternType.PUPIL_EYE:
                         {
                             var color = usedLayer.ColorMod.CurrentPatterns[0].Original.colors[1];
                             var pupilColor = Color.FromRgb((byte)color.red, (byte)color.green, (byte)color.blue);
@@ -372,17 +348,21 @@ namespace Dwarf_Portrait
                             partShape.Fill = eyeBrush;
                         }
                         break;
-                    case RemoteFortressReader.PatternType.MOTTLED:
+                    case PatternType.MOTTLED:
                         break;
                     default:
                         break;
                 }
             }
 
+            #endregion
+
             Vector direction = (pos - parentPos);
             if (direction.LengthSquared < 0.0001)
                 direction = new Vector(0, -1);
             direction.Normalize();
+
+            #region Categorization
 
             List<BodyPart> ExternalParts = new List<BodyPart>();
             List<BodyPart> LowerBodyParts = new List<BodyPart>();
@@ -401,6 +381,8 @@ namespace Dwarf_Portrait
             List<BodyPart> HeadParts = new List<BodyPart>();
             List<BodyPart> BackParts = new List<BodyPart>();
             List<BodyPart> TailParts = new List<BodyPart>();
+            List<BodyPart> LeftRibParts = new List<BodyPart>();
+            List<BodyPart> RightRibParts = new List<BodyPart>();
 
             foreach (var child in part.Children)
             {
@@ -455,6 +437,27 @@ namespace Dwarf_Portrait
                             case "TAIL":
                                 TailParts.Add(child);
                                 break;
+                            case "RIB_TRUE":
+                                for (int i = 0; i < 7; i++)
+                                    if (child.OriginalPart.token.StartsWith("L_"))
+                                        LeftRibParts.Add(child);
+                                    else
+                                        RightRibParts.Add(child);
+                                break;
+                            case "RIB_FALSE":
+                                for (int i = 0; i < 3; i++)
+                                    if (child.OriginalPart.token.StartsWith("L_"))
+                                        LeftRibParts.Add(child);
+                                    else
+                                        RightRibParts.Add(child);
+                                break;
+                            case "RIB_FLOATING":
+                                for (int i = 0; i < 2; i++)
+                                    if (child.OriginalPart.token.StartsWith("L_"))
+                                        LeftRibParts.Add(child);
+                                    else
+                                        RightRibParts.Add(child);
+                                break;
                             case "TOOTH":
                             case "TONGUE":
                             case "THROAT":
@@ -474,6 +477,10 @@ namespace Dwarf_Portrait
                         }
                 }
             }
+
+            #endregion
+
+            #region ChildrenCreation
 
             for (int i = 0; i < LeftEarParts.Count; i++)
             {
@@ -564,6 +571,28 @@ namespace Dwarf_Portrait
                 double rotateAngle = Range(i, LowerBodyParts.Count, 135, 225);
                 AddPart(canvas, pos, child, pos + (direction * length / 2).Rotate(rotateAngle), creatureScale, visualScale, sizeMod);
             }
+            for (int i = 0; i < EmbeddedParts.Count; i++)
+            {
+                BodyPart child = EmbeddedParts[i];
+                Vector childPos = direction;
+                childPos = childPos.Rotate(90);
+                childPos *= Range(i, EmbeddedParts.Count, -length / 4, length / 4);
+                AddPart(canvas, pos, child, pos + childPos, creatureScale, visualScale, sizeMod, true);
+            }
+            for (int i = 0; i < RightRibParts.Count; i++)
+            {
+                BodyPart child = RightRibParts[i];
+                Vector childPos = (direction.Rotate(90) * width * 0.25) + (direction * Range(i, RightRibParts.Count, length * 0.45, -length * 0.45));
+                Vector fakeParentPos = direction * Range(i, RightRibParts.Count, length * 0.45, -length * 0.45);
+                AddPart(canvas, fakeParentPos, child, pos + childPos, creatureScale, visualScale, sizeMod, true);
+            }
+            for (int i = 0; i < LeftRibParts.Count; i++)
+            {
+                BodyPart child = LeftRibParts[i];
+                Vector childPos = (direction.Rotate(-90) * width * 0.25) + (direction * Range(i, LeftRibParts.Count, length * 0.45, -length * 0.45));
+                Vector fakeParentPos = direction * Range(i, LeftRibParts.Count, length * 0.45, -length * 0.45);
+                AddPart(canvas, fakeParentPos, child, pos + childPos, creatureScale, visualScale, sizeMod, true);
+            }
             for (int i = 0; i < LeftParts.Count; i++)
             {
                 BodyPart child = LeftParts[i];
@@ -589,14 +618,6 @@ namespace Dwarf_Portrait
                 else
                     rotateAngle = Range(i, RightParts.Count, -45, -90);
                 AddPart(canvas, pos, child, pos + (direction * length / 2).Rotate(rotateAngle), creatureScale, visualScale, sizeMod);
-            }
-            for (int i = 0; i < EmbeddedParts.Count; i++)
-            {
-                BodyPart child = EmbeddedParts[i];
-                Vector childPos = direction;
-                childPos = childPos.Rotate(90);
-                childPos *= Range(i, EmbeddedParts.Count, -length / 4, length / 4);
-                AddPart(canvas, pos, child, pos + childPos, creatureScale, visualScale, sizeMod, true);
             }
             for (int i = 0; i < EyelidParts.Count; i++)
             {
@@ -669,7 +690,16 @@ namespace Dwarf_Portrait
                 childPos *= Range(i, NoseParts.Count, 0.1, 0.5);
                 AddPart(canvas, pos, child, pos + childPos, creatureScale, visualScale, sizeMod, true);
             }
+            #endregion
         }
+
+        private static Shape MakeCylinder(BodyPartRaw originalPart, double ratio, double creatureScale, double visualScale, out double width, out double length)
+        {
+            width = GetRatioCylinderWidth(originalPart.relsize * creatureScale, ratio) * visualScale;
+            length = width * ratio;
+            return new Rectangle();
+        }
+
         private static double Range(int i, int count, double min, double max)
         {
             if (count == 1)

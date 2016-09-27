@@ -262,10 +262,8 @@ namespace Dwarf_Portrait
                     case "EYEBROW":
                         continue;
                 }
-                if (usedLayer == null || layer.Original.layer_depth <= usedLayer.Original.layer_depth) // Lower depth = shallower layer. -1 = surface.
+                if (usedLayer == null || layer.Original.layer_depth < usedLayer.Original.layer_depth) // Lower depth = shallower layer. -1 = surface. we take the first non-duplicated layer from the shallowest layers
                 {
-                    if (usedLayer == null || layer.Original.tissue_id > usedLayer.Original.tissue_id)
-                    {
                         int duplicates = 0;
                         foreach (var testLayer in part.Layers)
                         {
@@ -276,7 +274,6 @@ namespace Dwarf_Portrait
                         }
                         if (duplicates <= 1)
                             usedLayer = layer;
-                    }
                 }
             }
             Color fillColor = Color.FromRgb(255, 255, 255);

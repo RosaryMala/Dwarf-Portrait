@@ -203,12 +203,20 @@ namespace Dwarf_Portrait
             if (string.IsNullOrEmpty(unitFilterTextbox.Text))
                 return true;
             else
-                return ((item as Creature).Name.IndexOf(unitFilterTextbox.Text, StringComparison.OrdinalIgnoreCase) >= 0)
-                    || ((item as Creature).Race.IndexOf(unitFilterTextbox.Text, StringComparison.OrdinalIgnoreCase) >= 0)
-                    || ((item as Creature).CasteRaw.description.IndexOf(unitFilterTextbox.Text, StringComparison.OrdinalIgnoreCase) >= 0);
+            {
+                var words = unitFilterTextbox.Text.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                foreach (var word in words)
+                {
+                    if (((item as Creature).Name.IndexOf(word, StringComparison.OrdinalIgnoreCase) >= 0)
+                        || ((item as Creature).Race.IndexOf(word, StringComparison.OrdinalIgnoreCase) >= 0)
+                        || ((item as Creature).CasteRaw.description.IndexOf(word, StringComparison.OrdinalIgnoreCase) >= 0))
+                        return true;
+                }
+                return false;
+            }
         }
 
-        private void unitFilterTextbox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        private void unitFilterTextbox_TextChanged(object sender, TextChangedEventArgs e)
         {
             if(unitListView.ItemsSource != null)
                 CollectionViewSource.GetDefaultView(unitListView.ItemsSource).Refresh();
